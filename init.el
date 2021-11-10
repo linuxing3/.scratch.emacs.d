@@ -338,6 +338,56 @@
   (use-package evil-nerd-commenter
     :bind ("M-/" . evilnc-comment-or-uncomment-lines))
 
+(use-package prodigy
+  :load-path "./localelpa/prodigy"
+  :config
+        (prodigy-define-service
+          :name "Information Center: El Universal"
+          :command "scrapy"
+          :args '("crawl" "eluniversal")
+          :cwd "~/Dropbox/shared/InformationCenter"
+          :tags '(work)
+          :stop-signal 'sigkill
+          :kill-process-buffer-on-stop t)
+
+        ;; NOTE: 进行培训PPT展示
+        (prodigy-define-service
+          :name "Run Marp Presentation"
+          :command "marp"
+          :args '("-s" "-w" ".")
+          :cwd "~/OneDrive/Documents/present"
+          :tags '(training)
+          :stop-signal 'sigkill
+          :kill-process-buffer-on-stop t)
+
+        
+        ;; NOTE: 进行HUGO博客预览
+        (prodigy-define-service
+          :name "Run Hugo Site Server"
+          :command "hugo"
+          :args '("server" "--buildDrafts")
+          :cwd "~/workspace/awesome-hugo-blog"
+          :tags '(work)
+          :stop-signal 'sigkill
+          :kill-process-buffer-on-stop t))
+
+(use-package hl-todo
+  :load-path "./localelpa/hl-tod"
+  :hook (prog-mode . hl-todo-mode)
+  :commands hl-todo-mode
+  :config
+  (setq hl-todo-highlight-punctuation ":"
+        hl-todo-keyword-faces
+        `(("TODO"  . ,(face-foreground 'warning))
+          ("FIXME" . ,(face-foreground 'error))
+          ("HACK"  . ,(face-foreground 'font-lock-constant-face))
+          ("REVIEW"  . ,(face-foreground 'font-lock-keyword-face))
+          ("NOTE"  . ,(face-foreground 'success))
+          ("DEPRECATED" . ,(face-foreground 'font-lock-doc-face))))
+  (when hl-todo-mode
+        (hl-todo-mode -1)
+        (hl-todo-mode +1)))
+
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
@@ -459,14 +509,15 @@
 
     (eshell-git-prompt-use-theme 'powerline))
 
-(setq dired-dwim-target t)
-
   (use-package dired
     :ensure nil
     :commands (dired dired-jump)
     :bind (("C-x C-j" . dired-jump))
     :custom ((dired-listing-switches "-agho --group-directories-first"))
     :config
+    (setq dired-dwim-target t)
+    (defun linuxing3/dired-mode-setup ()(dired-hide-details-mode 1))
+    (add-hook 'dired-mode-hook 'linuxing3/dired-mode-setup)
     (evil-collection-define-key 'normal 'dired-mode-map
       "h" 'dired-single-up-directory
       "l" 'dired-single-buffer))
@@ -651,4 +702,4 @@
 (setq user-full-name "Xing Wenju"
       user-mail-address "linuxing3@qq.com")
 (setq bookmark-default-file (dropbox-path "shared/emacs-bookmarks"))
-(setq custom-theme-directory (dropbox-path  "config/emacs/themes/"))
+(setq custom-theme-directory "./localelpa/themes/")

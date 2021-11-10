@@ -737,6 +737,70 @@ Emacs' built in commenting functionality =comment-dwim= (usually bound to =M-;=)
 
 #+end_src
 
+** External Services
+#+begin_src emacs-lisp
+(use-package prodigy
+  :load-path "./localelpa/prodigy"
+  :config
+        (prodigy-define-service
+          :name "Information Center: El Universal"
+          :command "scrapy"
+          :args '("crawl" "eluniversal")
+          :cwd "~/Dropbox/shared/InformationCenter"
+          :tags '(work)
+          :stop-signal 'sigkill
+          :kill-process-buffer-on-stop t)
+
+        ;; NOTE: 进行培训PPT展示
+        (prodigy-define-service
+          :name "Run Marp Presentation"
+          :command "marp"
+          :args '("-s" "-w" ".")
+          :cwd "~/OneDrive/Documents/present"
+          :tags '(training)
+          :stop-signal 'sigkill
+          :kill-process-buffer-on-stop t)
+
+        
+        ;; NOTE: 进行HUGO博客预览
+        (prodigy-define-service
+          :name "Run Hugo Site Server"
+          :command "hugo"
+          :args '("server" "--buildDrafts")
+          :cwd "~/workspace/awesome-hugo-blog"
+          :tags '(work)
+          :stop-signal 'sigkill
+          :kill-process-buffer-on-stop t))
+
+#+end_src
+
+#+RESULTS:
+: t
+
+** Highlight todo
+
+#+begin_src emacs-lisp
+(use-package hl-todo
+  :load-path "./localelpa/hl-tod"
+  :hook (prog-mode . hl-todo-mode)
+  :commands hl-todo-mode
+  :config
+  (setq hl-todo-highlight-punctuation ":"
+        hl-todo-keyword-faces
+        `(("TODO"  . ,(face-foreground 'warning))
+          ("FIXME" . ,(face-foreground 'error))
+          ("HACK"  . ,(face-foreground 'font-lock-constant-face))
+          ("REVIEW"  . ,(face-foreground 'font-lock-keyword-face))
+          ("NOTE"  . ,(face-foreground 'success))
+          ("DEPRECATED" . ,(face-foreground 'font-lock-doc-face))))
+  (when hl-todo-mode
+        (hl-todo-mode -1)
+        (hl-todo-mode +1)))
+#+end_src
+
+#+RESULTS:
+| hl-todo-mode | rainbow-delimiters-mode |
+
 ** Rainbow Delimiters
 
 [[https://github.com/Fanael/rainbow-delimiters][rainbow-delimiters]] is useful in programming modes because it colorizes nested parentheses and brackets according to their nesting depth.  This makes it a lot easier to visually match parentheses in Emacs Lisp code without having to count them yourself.
@@ -992,13 +1056,6 @@ Dired is a built-in file manager for Emacs that does some pretty amazing things!
 If non-nil, Dired tries to guess a default target directory. This means: if there is a Dired buffer displayed in some window, use its
 current directory, instead of this Dired buffer's current directory.
 
-#+begin_src emacs-lisp
-(setq dired-dwim-target t)
-#+end_src
-
-#+RESULTS:
-: t
-
 - =C= - Copy marked files (or if no files are marked, the current file)
 - Copying single and multiple files
 - =U= - Unmark all files in buffer
@@ -1039,6 +1096,9 @@ current directory, instead of this Dired buffer's current directory.
     :bind (("C-x C-j" . dired-jump))
     :custom ((dired-listing-switches "-agho --group-directories-first"))
     :config
+    (setq dired-dwim-target t)
+    (defun linuxing3/dired-mode-setup ()(dired-hide-details-mode 1))
+    (add-hook 'dired-mode-hook 'linuxing3/dired-mode-setup)
     (evil-collection-define-key 'normal 'dired-mode-map
       "h" 'dired-single-up-directory
       "l" 'dired-single-buffer))
@@ -1336,8 +1396,8 @@ Instead of using =doom= macros like =map!=, which is not very convenient to migr
 (setq user-full-name "Xing Wenju"
       user-mail-address "linuxing3@qq.com")
 (setq bookmark-default-file (dropbox-path "shared/emacs-bookmarks"))
-(setq custom-theme-directory (dropbox-path  "config/emacs/themes/"))
+(setq custom-theme-directory "./localelpa/themes/")
 #+end_src
 
 #+RESULTS:
-: c:/Users/wjb/OneDrive/config/emacs/themes/
+: ./localelpa/themes/
