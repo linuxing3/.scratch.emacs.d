@@ -1,0 +1,28 @@
+
+
+* 2020
+
+** 2020-10 October
+
+*** 2020-10-09 Friday
+
+**** 10:08 AM - Journal                                          :journal:
+:LOGBOOK:
+CLOCK: [2020-10-09 Fri 10:08]--[2020-10-09 Fri 10:08] =>  0:00
+:END:
+
+Today was a great day!  We learned more about Org Mode.
+
+* 2021
+
+** 2021-11 十一月
+
+*** 2021-11-10 星期三
+
+**** Checking Email                                                :email:
+:LOGBOOK:
+CLOCK: [2021-11-10 周三 15:06]--[2021-11-10 周三 15:06] =>  0:00
+:END:
+
+
+checked email

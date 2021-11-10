@@ -1,0 +1,9 @@
+etc/
+var/
+elpa/
+packages/
+server/
+show-notes
+
+*.elc
+*.data
