@@ -1,4 +1,4 @@
-#+title: Emacs From Scratch Configuration
+﻿#+title: Emacs From Scratch Configuration
 #+PROPERTY: header-args:emacs-lisp :tangle ./init.el :mkdirp yes
 
 * Welcome!
@@ -15,8 +15,8 @@ The following variables are used to tweak some of the configuration pieces for u
   ;;       in Emacs and init.el will be generated automatically!
 
   ;; You will most likely need to adjust this font size for your system!
-  (defvar efs/default-font-size 160)
-  (defvar efs/default-variable-font-size 160)
+  (defvar efs/default-font-size 180)
+  (defvar efs/default-variable-font-size 180)
 
   ;; Make frame transparency overridable
   (defvar efs/frame-transparency '(90 . 90))
@@ -90,15 +90,21 @@ You can also use =M-x auto-package-update-now= to update right now!
 
 #+end_src
 
-* [学习] Loading Private Configuration
+* Loading Private Configuration
+
+** Load my private modules helpers.
+
+Here we just add some helper functions like =dropbox-path= and =workspace-path= 
 
 #+begin_src emacs-lisp
-
-   ;; Load my private modules.
   (add-to-list 'load-path "~/.evil.emacs.d/modules")
   (require 'module-lib)
   (require 'module-helper)
 #+end_src
+
+#+RESULTS:
+: module-helper
+
 * Keep Folders Clean
 
 We use the [[https://github.com/emacscollective/no-littering/blob/master/no-littering.el][no-littering]] package to keep folders where we edit files and the Emacs configuration folder clean!  It knows about a wide variety of variables for built in Emacs features as well as those from community packages so it can be much easier than finding and setting these variables yourself.
@@ -170,6 +176,34 @@ I am using the [[https://github.com/tonsky/FiraCode][Fira Code]] and [[https://f
 (set-face-attribute 'variable-pitch nil :font "Cantarell" :height efs/default-variable-font-size :weight 'regular)
 
 #+end_src
+
+** Chinese Font
+
+#+begin_src emacs-lisp
+;; (set-fontset-font "fontset-default" 'han "Microsoft YaHei UI")
+(defun +modern-ui-chinese-h ()
+  "Set Font for chinese language"
+  (set-fontset-font
+   t
+   'han
+   (cond
+    ((string-equal system-type "windows-nt")
+     (cond
+      ((member "Microsoft YaHei UI" (font-family-list)) "Microsoft YaHei UI")
+      ))
+    ((string-equal system-type "darwin")
+     (cond
+      ((member "Hei" (font-family-list)) "Hei")
+      ((member "Heiti SC" (font-family-list)) "Heiti SC")
+      ((member "Heiti TC" (font-family-list)) "Heiti TC")))
+    ((string-equal system-type "gnu/linux")
+     (cond
+      ((member "WenQuanYi Micro Hei" (font-family-list)) "WenQuanYi Micro Hei"))))))
+
+(+modern-ui-chinese-h)
+#+end_src
+
+#+RESULTS:
 
 * Keybinding Configuration
 
@@ -373,174 +407,6 @@ This is an example of using [[https://github.com/abo-abo/hydra][Hydra]] to desig
 
 #+end_src
 
-* Org Mode
-
-[[https://orgmode.org/][Org Mode]] is one of the hallmark features of Emacs.  It is a rich document editor, project planner, task and time tracker, blogging engine, and literate coding utility all wrapped up in one package.
-
-** Better Font Faces
-
-The =efs/org-font-setup= function configures various text faces to tweak the sizes of headings and use variable width fonts in most cases so that it looks more like we're editing a document in =org-mode=.  We switch back to fixed width (monospace) fonts for code blocks and tables so that they display correctly.
-
-#+begin_src emacs-lisp
-
-  (defun efs/org-font-setup ()
-    ;; Replace list hyphen with dot
-    (font-lock-add-keywords 'org-mode
-                            '(("^ *\\([-]\\) "
-                               (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
-
-    ;; Set faces for heading levels
-    (dolist (face '((org-level-1 . 1.2)
-                    (org-level-2 . 1.1)
-                    (org-level-3 . 1.05)
-                    (org-level-4 . 1.0)
-                    (org-level-5 . 1.1)
-                    (org-level-6 . 1.1)
-                    (org-level-7 . 1.1)
-                    (org-level-8 . 1.1)))
-      (set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face)))
-
-    ;; Ensure that anything that should be fixed-pitch in Org files appears that way
-    (set-face-attribute 'org-block nil    :foreground nil :inherit 'fixed-pitch)
-    (set-face-attribute 'org-table nil    :inherit 'fixed-pitch)
-    (set-face-attribute 'org-formula nil  :inherit 'fixed-pitch)
-    (set-face-attribute 'org-code nil     :inherit '(shadow fixed-pitch))
-    (set-face-attribute 'org-table nil    :inherit '(shadow fixed-pitch))
-    (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-    (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-    (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-    (set-face-attribute 'org-checkbox nil  :inherit 'fixed-pitch)
-    (set-face-attribute 'line-number nil :inherit 'fixed-pitch)
-    (set-face-attribute 'line-number-current-line nil :inherit 'fixed-pitch))
-
-#+end_src
-
-** Basic Config
-
-This section contains the basic configuration for =org-mode= plus the configuration for Org agendas and capture templates.  There's a lot to unpack in here so I'd recommend watching the videos for [[https://youtu.be/VcgjTEa0kU4][Part 5]] and [[https://youtu.be/PNE-mgkZ6HM][Part 6]] for a full explanation.
-
-#+begin_src emacs-lisp
-
-  (defun efs/org-mode-setup ()
-    (org-indent-mode)
-    (variable-pitch-mode 1)
-    (visual-line-mode 1))
-
-  (use-package org
-    :pin org
-    :commands (org-capture org-agenda)
-    :hook (org-mode . efs/org-mode-setup)
-    :config
-    (setq org-ellipsis " ▾")
-
-    (setq org-agenda-start-with-log-mode t)
-    (setq org-log-done 'time)
-    (setq org-log-into-drawer t)
-
-    (require 'org-habit)
-    (add-to-list 'org-modules 'org-habit)
-    (setq org-habit-graph-column 60)
-
-    (setq org-refile-targets
-      '(("Archive.org" :maxlevel . 1)
-        ("Tasks.org" :maxlevel . 1)))
-
-    ;; Save Org buffers after refiling!
-    (advice-add 'org-refile :after 'org-save-all-org-buffers)
-
-    (define-key global-map (kbd "C-c j")
-      (lambda () (interactive) (org-capture nil "jj")))
-
-    (efs/org-font-setup))
-
-#+end_src
-
-*** Nicer Heading Bullets
-
-[[https://github.com/sabof/org-bullets][org-bullets]] replaces the heading stars in =org-mode= buffers with nicer looking characters that you can control.  Another option for this is [[https://github.com/integral-dw/org-superstar-mode][org-superstar-mode]] which we may cover in a later video.
-
-#+begin_src emacs-lisp
-
-  (use-package org-bullets
-    :hook (org-mode . org-bullets-mode)
-    :custom
-    (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
-
-#+end_src
-
-*** Center Org Buffers
-
-We use [[https://github.com/joostkremers/visual-fill-column][visual-fill-column]] to center =org-mode= buffers for a more pleasing writing experience as it centers the contents of the buffer horizontally to seem more like you are editing a document.  This is really a matter of personal preference so you can remove the block below if you don't like the behavior.
-
-#+begin_src emacs-lisp
-
-  (defun efs/org-mode-visual-fill ()
-    (setq visual-fill-column-width 100
-          visual-fill-column-center-text t)
-    (visual-fill-column-mode 1))
-
-  (use-package visual-fill-column
-    :hook (org-mode . efs/org-mode-visual-fill))
-
-#+end_src
-
-** Configure Babel Languages
-
-To execute or export code in =org-mode= code blocks, you'll need to set up =org-babel-load-languages= for each language you'd like to use.  [[https://orgmode.org/worg/org-contrib/babel/languages.html][This page]] documents all of the languages that you can use with =org-babel=.
-
-#+begin_src emacs-lisp
-
-  (with-eval-after-load 'org
-    (org-babel-do-load-languages
-        'org-babel-load-languages
-        '((emacs-lisp . t)
-        (python . t)))
-
-    (push '("conf-unix" . conf-unix) org-src-lang-modes))
-
-#+end_src
-
-** Structure Templates
-
-Org Mode's [[https://orgmode.org/manual/Structure-Templates.html][structure templates]] feature enables you to quickly insert code blocks into your Org files in combination with =org-tempo= by typing =<= followed by the template name like =el= or =py= and then press =TAB=.  For example, to insert an empty =emacs-lisp= block below, you can type =<el= and press =TAB= to expand into such a block.
-
-You can add more =src= block templates below by copying one of the lines and changing the two strings at the end, the first to be the template name and the second to contain the name of the language [[https://orgmode.org/worg/org-contrib/babel/languages.html][as it is known by Org Babel]].
-
-#+begin_src emacs-lisp
-
-  (with-eval-after-load 'org
-    ;; This is needed as of Org 9.2
-    (require 'org-tempo)
-
-    (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
-    (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
-    (add-to-list 'org-structure-template-alist '("py" . "src python")))
-
-#+end_src
-
-** Auto-tangle Configuration Files
-
-This snippet adds a hook to =org-mode= buffers so that =efs/org-babel-tangle-config= gets executed each time such a buffer gets saved.  This function checks to see if the file being saved is the Emacs.org file you're looking at right now, and if so, automatically exports the configuration here to the associated output files.
-
-#+begin_src emacs-lisp
-
-  ;; Automatically tangle our Emacs.org config file when we save it
-  (defun efs/org-babel-tangle-config ()
-    (when (string-equal (file-name-directory (buffer-file-name))
-                        (expand-file-name user-emacs-directory))
-      ;; Dynamic scoping to the rescue
-      (let ((org-confirm-babel-evaluate nil))
-        (org-babel-tangle))))
-
-  (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'efs/org-babel-tangle-config)))
-
-#+end_src
-
-** [学习] Loading Private Org Configuration
-
-#+begin_src emacs-lisp
-  (require 'module-org)
-#+end_src
 * Development
 ** Languages
 
@@ -945,14 +811,17 @@ Emacs' built in commenting functionality =comment-dwim= (usually bound to =M-;=)
   (setq aya-persist-snippets-dir +snippets-dir))
 
 (use-package doom-snippets
-  :load-path "~/.evil.emacs.d/assets/doom-snippets"
+  :load-path "./assets/doom-snippets"
   :after yasnippet
   :config
   (add-to-list 'yas-snippet-dirs 'doom-snippets-dir))
 
 #+end_src
-* Terminals
 
+#+RESULTS:
+: t
+
+* Terminals
 ** term-mode
 
 =term-mode= is a built-in terminal emulator in Emacs.  Because it is written in Emacs Lisp, you can start using it immediately with very little configuration.  If you are on Linux or macOS, =term-mode= is a great choice to get started because it supports fairly complex terminal applications (=htop=, =vim=, etc) and works pretty reliably.  However, because it is written in Emacs Lisp, it can be slower than other options like =vterm=.  The speed will only be an issue if you regularly run console apps with a lot of output.
@@ -1120,6 +989,16 @@ Dired is a built-in file manager for Emacs that does some pretty amazing things!
 
 **** Copying and Renaming files
 
+If non-nil, Dired tries to guess a default target directory. This means: if there is a Dired buffer displayed in some window, use its
+current directory, instead of this Dired buffer's current directory.
+
+#+begin_src emacs-lisp
+(setq dired-dwim-target t)
+#+end_src
+
+#+RESULTS:
+: t
+
 - =C= - Copy marked files (or if no files are marked, the current file)
 - Copying single and multiple files
 - =U= - Unmark all files in buffer
@@ -1207,6 +1086,8 @@ This is an example of configuring another non-Emacs application using org-mode. 
 
 #+end_src
 
+*** Plantuml drawing tools
+
 #+begin_src emacs-lisp
 (require 'iimage)
 (autoload 'iimage-mode "iimage" "Support Inline image minor mode." t)
@@ -1270,9 +1151,193 @@ Dial the GC threshold back down so that garbage collection happens more frequent
 
 #+end_src
 
-* [学习] Loading Private Keybinds Configuration
+* Org Mode
+
+[[https://orgmode.org/][Org Mode]] is one of the hallmark features of Emacs.  It is a rich document editor, project planner, task and time tracker, blogging engine, and literate coding utility all wrapped up in one package.
+
+** Better Font Faces
+
+The =efs/org-font-setup= function configures various text faces to tweak the sizes of headings and use variable width fonts in most cases so that it looks more like we're editing a document in =org-mode=.  We switch back to fixed width (monospace) fonts for code blocks and tables so that they display correctly.
+
+#+begin_src emacs-lisp
+
+  (defun efs/org-font-setup ()
+    ;; Replace list hyphen with dot
+    (font-lock-add-keywords 'org-mode
+                            '(("^ *\\([-]\\) "
+                               (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+
+    ;; Set faces for heading levels
+    (dolist (face '((org-level-1 . 1.2)
+                    (org-level-2 . 1.1)
+                    (org-level-3 . 1.05)
+                    (org-level-4 . 1.0)
+                    (org-level-5 . 1.1)
+                    (org-level-6 . 1.1)
+                    (org-level-7 . 1.1)
+                    (org-level-8 . 1.1)))
+      (set-face-attribute (car face) nil :font "Microsoft Yahei UI" :weight 'regular :height (cdr face)))
+
+    ;; Ensure that anything that should be fixed-pitch in Org files appears that way
+    (set-face-attribute 'org-block nil    :foreground nil :inherit 'fixed-pitch)
+    (set-face-attribute 'org-table nil    :inherit 'fixed-pitch)
+    (set-face-attribute 'org-formula nil  :inherit 'fixed-pitch)
+    (set-face-attribute 'org-code nil     :inherit '(shadow fixed-pitch))
+    (set-face-attribute 'org-table nil    :inherit '(shadow fixed-pitch))
+    (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+    (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+    (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+    (set-face-attribute 'org-checkbox nil  :inherit 'fixed-pitch)
+    (set-face-attribute 'line-number nil :inherit 'fixed-pitch)
+    (set-face-attribute 'line-number-current-line nil :inherit 'fixed-pitch))
+
+#+end_src
+
+#+RESULTS:
+: efs/org-font-setup
+
+** Basic Config
+
+This section contains the basic configuration for =org-mode= plus the configuration for Org agendas and capture templates.  There's a lot to unpack in here so I'd recommend watching the videos for [[https://youtu.be/VcgjTEa0kU4][Part 5]] and [[https://youtu.be/PNE-mgkZ6HM][Part 6]] for a full explanation.
+
+#+begin_src emacs-lisp
+
+  (defun efs/org-mode-setup ()
+    (org-indent-mode)
+    (variable-pitch-mode 1)
+    (visual-line-mode 1))
+
+  (use-package org
+    :pin org
+    :commands (org-capture org-agenda)
+    :hook (org-mode . efs/org-mode-setup)
+    :config
+    (setq org-ellipsis " ▾")
+
+    (setq org-agenda-start-with-log-mode t)
+    (setq org-log-done 'time)
+    (setq org-log-into-drawer t)
+
+    (require 'org-habit)
+    (add-to-list 'org-modules 'org-habit)
+    (setq org-habit-graph-column 60)
+
+    (setq org-refile-targets
+      '(("Archive.org" :maxlevel . 1)
+        ("Tasks.org" :maxlevel . 1)))
+
+    ;; Save Org buffers after refiling!
+    (advice-add 'org-refile :after 'org-save-all-org-buffers)
+
+    (define-key global-map (kbd "C-c j")
+      (lambda () (interactive) (org-capture nil "jj")))
+
+    (efs/org-font-setup))
+
+#+end_src
+
+*** Nicer Heading Bullets
+
+[[https://github.com/sabof/org-bullets][org-bullets]] replaces the heading stars in =org-mode= buffers with nicer looking characters that you can control.  Another option for this is [[https://github.com/integral-dw/org-superstar-mode][org-superstar-mode]] which we may cover in a later video.
+
+#+begin_src emacs-lisp
+
+  (use-package org-bullets
+    :hook (org-mode . org-bullets-mode)
+    :custom
+    (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
+
+#+end_src
+
+*** Center Org Buffers
+
+We use [[https://github.com/joostkremers/visual-fill-column][visual-fill-column]] to center =org-mode= buffers for a more pleasing writing experience as it centers the contents of the buffer horizontally to seem more like you are editing a document.  This is really a matter of personal preference so you can remove the block below if you don't like the behavior.
+
+#+begin_src emacs-lisp
+
+  (defun efs/org-mode-visual-fill ()
+    (setq visual-fill-column-width 100
+          visual-fill-column-center-text t)
+    (visual-fill-column-mode 1))
+
+  (use-package visual-fill-column
+    :hook (org-mode . efs/org-mode-visual-fill))
+
+#+end_src
+
+** Configure Babel Languages
+
+To execute or export code in =org-mode= code blocks, you'll need to set up =org-babel-load-languages= for each language you'd like to use.  [[https://orgmode.org/worg/org-contrib/babel/languages.html][This page]] documents all of the languages that you can use with =org-babel=.
+
+#+begin_src emacs-lisp
+
+  (with-eval-after-load 'org
+    (org-babel-do-load-languages
+        'org-babel-load-languages
+        '((emacs-lisp . t)
+        (python . t)))
+
+    (push '("conf-unix" . conf-unix) org-src-lang-modes))
+
+#+end_src
+
+** Structure Templates
+
+Org Mode's [[https://orgmode.org/manual/Structure-Templates.html][structure templates]] feature enables you to quickly insert code blocks into your Org files in combination with =org-tempo= by typing =<= followed by the template name like =el= or =py= and then press =TAB=.  For example, to insert an empty =emacs-lisp= block below, you can type =<el= and press =TAB= to expand into such a block.
+
+You can add more =src= block templates below by copying one of the lines and changing the two strings at the end, the first to be the template name and the second to contain the name of the language [[https://orgmode.org/worg/org-contrib/babel/languages.html][as it is known by Org Babel]].
+
+#+begin_src emacs-lisp
+
+  (with-eval-after-load 'org
+    ;; This is needed as of Org 9.2
+    (require 'org-tempo)
+
+    (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
+    (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+    (add-to-list 'org-structure-template-alist '("py" . "src python")))
+
+#+end_src
+
+** Auto-tangle Configuration Files
+
+This snippet adds a hook to =org-mode= buffers so that =efs/org-babel-tangle-config= gets executed each time such a buffer gets saved.  This function checks to see if the file being saved is the Emacs.org file you're looking at right now, and if so, automatically exports the configuration here to the associated output files.
+
+#+begin_src emacs-lisp
+
+  ;; Automatically tangle our Emacs.org config file when we save it
+  (defun efs/org-babel-tangle-config ()
+    (when (string-equal (file-name-directory (buffer-file-name))
+                        (expand-file-name user-emacs-directory))
+      ;; Dynamic scoping to the rescue
+      (let ((org-confirm-babel-evaluate nil))
+        (org-babel-tangle))))
+
+  (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'efs/org-babel-tangle-config)))
+
+#+end_src
+
+** [学习] Loading Private Org Configuration
+
+#+begin_src emacs-lisp
+  (require 'module-org)
+#+end_src
+* Loading Private Keybinds 
+All common binds in one file for better migration!!! Powered by =general=
+
+Instead of using =doom= macros like =map!=, which is not very convenient to migrate.
 
 #+begin_src emacs-lisp
   (require 'module-keybinds)
-  (require 'module-keybinds)
 #+end_src
+
+* Load my private  information
+#+begin_src emacs-lisp
+(setq user-full-name "Xing Wenju"
+      user-mail-address "linuxing3@qq.com")
+(setq bookmark-default-file (dropbox-path "shared/emacs-bookmarks"))
+(setq custom-theme-directory (dropbox-path  "config/emacs/themes/"))
+#+end_src
+
+#+RESULTS:
+: c:/Users/wjb/OneDrive/config/emacs/themes/
