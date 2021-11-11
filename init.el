@@ -47,9 +47,10 @@
     (auto-package-update-maybe)
     (auto-package-update-at-time "09:00"))
 
+  (add-to-list 'load-path "~/.evil.emacs.d/core")
   (add-to-list 'load-path "~/.evil.emacs.d/modules")
-  (require 'module-lib)
-  (require 'module-helper)
+  (require 'core-lib)
+  (require 'core-helper)
 
   ;; NOTE: If you want to move everything out of the ~/.emacs.d folder
   ;; reliably, set `user-emacs-directory` before loading no-littering!
@@ -697,7 +698,7 @@
 
   (require 'module-org)
 
-  (require 'module-keybinds)
+  (require 'core-keybinds)
 
 (setq user-full-name "Xing Wenju"
       user-mail-address "linuxing3@qq.com")

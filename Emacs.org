@@ -99,9 +99,10 @@ You can also use =M-x auto-package-update-now= to update right now!
 Here we just add some helper functions like =dropbox-path= and =workspace-path= 
 
 #+begin_src emacs-lisp
+  (add-to-list 'load-path "~/.evil.emacs.d/core")
   (add-to-list 'load-path "~/.evil.emacs.d/modules")
-  (require 'module-lib)
-  (require 'module-helper)
+  (require 'core-lib)
+  (require 'core-helper)
 #+end_src
 
 #+RESULTS:
@@ -1387,13 +1388,13 @@ This snippet adds a hook to =org-mode= buffers so that =efs/org-babel-tangle-con
 #+begin_src emacs-lisp
   (require 'module-org)
 #+end_src
-* 个人键绑定 
+** 个人键绑定 
 All common binds in one file for better migration!!! Powered by =general=
 
 Instead of using =doom= macros like =map!=, which is not very convenient to migrate.
 
 #+begin_src emacs-lisp
-  (require 'module-keybinds)
+  (require 'core-keybinds)
 #+end_src
 
 * 个人信息
