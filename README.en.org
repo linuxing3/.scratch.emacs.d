@@ -1,18 +1,24 @@
-#+title: 从头配置Emacs
+#+title: Emacs From Scratch
 
-这是一个简单的 =emacs= 配置测试和教学项目，源码来自令人印象深刻的一位国外开发者 [[https://daviwil.com/][David Wilson]] 。 特性包括：
+This is an example of a fully custom Emacs configuration that you can use as inspiration when building your own!
 
-+ 使用文学编程，可以自动生成 =init.el= 文件。
+We're developing this configuration live on YouTube, subscribe to [[https://www.youtube.com/c/SystemCrafters?sub_confirmation=1][System Crafters]] (make sure to click the bell!) so that you're notified of future streams.
 
-+ 简洁的配置，清晰的结构
+If you're enjoying the videos and benefitting from the examples in this repo, please *consider [[https://github.com/sponsors/daviwil][becoming a sponsor]]* to support the development of future content!
 
-+ 详细的教程
+* How to Use This Configuration
 
- + Linux下作为桌面管理器
+This repo is meant to be a companion to the Emacs From Scratch video series, serving as an example of a custom configuration build on top of vanilla Emacs.  I give instructions below for how to set it up to try it out, but it isn't meant to be used as your main configuration!  My goal here is to provide a working configuration that you can take inspiration from (and copy from directly).
 
-* 相关介绍和资料
+Just keep in mind that this repo isn't set up to be used directly as your own configuration!  Copy the code to your own dotfiles repository and have fun :)
 
-感兴趣的，可以观看原作者的文章和视频。
+* Episodes
+
+This repo now contains configuration from multiple series on the channel!
+
+** [[https://www.youtube.com/playlist?list=PLEoMzSkcN8oPH1au7H6B7bBJ4ZO7BXjSZ][Emacs From Scratch]]
+
+Here is a list of all the episode videos with links to the configuration we built for each one:
 
 1. [[https://www.youtube.com/watch?v=74zOY-vgkyw][Live-Coding a Custom Emacs Configuration from Scratch]] ([[https://github.com/daviwil/emacs-from-scratch/tree/c0266ff684f670ecc5e41615c0282912e6615214][Code]], [[file:show-notes/Emacs-01.org][Notes]])
 2. [[https://www.youtube.com/watch?v=IspAZtNTslY][Adding Helpful UI Improvements]] ([[https://github.com/daviwil/emacs-from-scratch/tree/43c0401355c7971cb4491690ee4b8449505a5d58][Code]], [[file:show-notes/Emacs-02.org][Notes]])
@@ -72,30 +78,107 @@
 4. [[https://youtu.be/aml36yZ-ANc][Enhance Your Emails with Org Mode]] ([[file:show-notes/Emacs-Mail-04.org][Notes]])
 5. [[https://youtu.be/dSZu4jwvaSs][Craft an Email Workflow with Org Mode]] ([[file:show-notes/Emacs-Mail-05.org][Notes]])
 
-* 功能用法
+* Usage Instructions
 
-*IMPORTANT:*  可以添加自定义功能，但是要注意可能会出错！
+*IMPORTANT:* Be sure to read the commentary in [[file:Emacs.org][Emacs.org]] in case anything unexpected happens when you load this configuration.  Feel free to [[https://github.com/daviwil/runemacs/issues][file an issue]] to discuss any questions or problems you have so we can discuss it in a future stream!
 
 *Linux and macOS*
 
-Linux用户通过 =apt= 安装 Emacs
-MacOS用户使用 [[https://brew.sh/][Homebrew]] ，命令 =brew install emacs=.
+On Linux, Emacs can be found in every major Linux distribution's package manager.  On macOS you can install Emacs using [[https://brew.sh/][Homebrew]] via =brew install emacs=.
 
-1. 克隆本仓库 : =git clone https://github.com/daviwil/emacs-from-scratch=
-2. 到 =~/.emacs.d=.
-3. 启动Emacs!
+You can easily get started with this configuration on Linux and macOS by following these steps:
+
+1. Clone this repository to a folder on your system: =git clone https://github.com/daviwil/emacs-from-scratch=
+2. Back up any existing Emacs configuration you may already have in your home directory in the =.emacs.d= folder (you could try moving it to =.emacs.d-old=)
+3. Rename the directory for the clone of this repo to =~/.emacs.d=.
+4. Start Emacs!
 
 *Windows*
 
-下载 Emacs version (27.1 )， 链接如下 [[https://ftp.gnu.org/gnu/emacs/windows/emacs-27/][GNU FTP site]]， 安装 [[https://ftp.gnu.org/gnu/emacs/windows/emacs-27/emacs-27.1-x86_64-installer.exe][installer package]]
-或者使用 [[https://chocolatey.org/packages/Emacs][install Emacs via Chocolatey]] 
+You can download the latest Emacs version (27.1 at the time of this writing) for Windows by heading to the [[https://ftp.gnu.org/gnu/emacs/windows/emacs-27/][GNU FTP site]].  Downloading and running the [[https://ftp.gnu.org/gnu/emacs/windows/emacs-27/emacs-27.1-x86_64-installer.exe][installer package]] will likely be the easiest way to get started.  You can also [[https://chocolatey.org/packages/Emacs][install Emacs via Chocolatey]] if you prefer a more automated approach.
 
-** 安装字体
+The location where the Emacs configuration folder lives may vary based on your version of Windows.  If you have trouble getting this to work, check the [[https://www.gnu.org/software/emacs/manual/html_node/efaq-w32/Location-of-init-file.html#Location-of-init-file][official FAQ]] on the topic.  If you still can't get it to work, feel free to file an issue and I can help investigate.
 
-本配置使用了如下字体，可以随意更改
-编程字体 [[https://github.com/tonsky/FiraCode][Fira Code]] font by [[https://github.com/tonsky][@tonsky]]，安装教程 [[https://github.com/tonsky/FiraCode/wiki/Installing][this wiki page]].
+For most modern Windows versions (Windows 7+), these steps should work:
 
-* 建议
+1. Clone this repository to a folder on your system: =git clone https://github.com/daviwil/emacs-from-scratch=
+2. Back up any existing Emacs configuration you may already have in your home directory  (likely =C:\Users\yourusername\=) in the =.emacs.d= folder (you could try moving it to =.emacs.d-old=)
+3. Rename the directory for the clone of this repo to =C:\Users\yourusername\.emacs.d=.
+4. Start Emacs!
 
-将 =cap= 和 =ctrl= 互换，可以极大提高效率。因为 =cap= 键的使用率非常低。
+** Installing the Fira Code Font
 
+This configuration uses the [[https://github.com/tonsky/FiraCode][Fira Code]] font by [[https://github.com/tonsky][@tonsky]] and installation instructions can be found on [[https://github.com/tonsky/FiraCode/wiki/Installing][this wiki page]].
+
+However, since this is meant to be /your/ configuration, feel free to choose your own font!
+
+* Recommendations
+
+Here are some general recommendations on Emacs usage that you might find helpful:
+
+** Replace CapsLock with CTRL
+
+Most people don't use the CapsLock key (unless you like YELLING ON THE INTERNET) so you can use this simple fix to replace it with the CTRL to make your Emacs life easier.  Doing this will prevent you from having to bend your pinky down all day long to hit all those fabled Emacs keybindings, allowing you to keep your hands on the home row of the keyboard.
+
+Here's how to do it across all 3 major operating systems:
+
+*Linux X11*
+
+There are [[https://askubuntu.com/questions/33774/how-do-i-remap-the-caps-lock-and-ctrl-keys][many ways]] to accomplish this in Linux, but the easiest (and most repeatable) I've found is to use [[https://wiki.archlinux.org/index.php/Xmodmap][xmodmap]].  First, create a file named =.Xmodmap= in your home folder and populate it like so:
+
+#+begin_src
+
+clear lock
+clear control
+keycode 66 = Control_L
+add control = Control_L
+add Lock = Control_R
+
+#+end_src
+
+This replaces CapsLock with control and also replaces the Ctrl key on the right side with CapsLock just in case you ever need to use it.  Most login systems (GDM, KDM, etc) will load this file when you log in so you might not need to do anything extra for it to take effect, just log out and log back in again.  If that doesn't seem to work, you can add this line to one of your startup files (=.xinitrc=, =.profile=, window manager configuration, etc):
+
+#+begin_src sh
+
+xmodmap ~/.Xmodmap
+
+#+end_src
+
+*Linux sway*
+
+In your =~/.config/sway/config= file add this stanza and reload the config (usually $mod-Shift-c) or =swaymsg reload=:
+
+#+begin_src
+input * {
+xkb_options caps:ctrl_modifier
+}
+#+end_src
+
+
+*Windows*
+
+Approach #1: Change the binding in the Windows registry
+
+On Windows you can use a simple registry file to tweak the CapsLock mapping.  Save the following text to a file called =CapsLockHack.reg=:
+
+#+begin_src
+
+REGEDIT4
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Keyboard Layout]
+"Scancode Map"=hex:00,00,00,00,00,00,00,00,02,00,00,00,1d,00,3a,00,00,00,00,00
+
+#+end_src
+
+Now double-click on this file in Windows Explorer and allow Windows to apply it to your registry settings.  After you log out of your current session and log back in the new key mapping should be in effect. Note that this change will affect *all* users on your system.
+
+Approach #2: Use Microsoft's PowerToys
+
+You can use PowerToys' Keyboard Manager to easily remap the keys. Download the tool from their [[https://github.com/microsoft/PowerToys/releases][github]] page and install it. Then open the powertoys settings (you sould find it in the taskbar), go to keyboard manager, enable it if it isn't already enabled and remap your keys. Once finished you should see something like:
+
+=Caps Lock=   ➞ =Ctrl (Left)=
+
+=Ctrl (left)= ➞ =Caps Lock=
+
+*macOS*
+
+Thankfully Apple saw fit to make this a first-class option in macOS.  You can follow the [[https://support.apple.com/guide/mac-help/change-the-behavior-of-the-modifier-keys-mchlp1011/mac][official documentation]] for your version of macOS to find the Modifier Keys settings and then switch Caps Lock to Control on that page.

@@ -1,13 +1,12 @@
 ﻿#+title: Emacs From Scratch Configuration
 #+PROPERTY: header-args:emacs-lisp :tangle ./init.el :mkdirp yes
 
-* Welcome!
+* 欢迎辞!
 
-This is the configuration we've been building in the *Emacs From Scratch* series, now written as an Org Mode document.  This file generates [[file:init.el][init.el]] which can be loaded by Emacs at startup.
+本文件是我的Emacs配置文件，将被自动编译成 [[file:init.el][init.el]] 文件。
 
-*NOTE:* If you run into any issues while using this configuration, please [[https://github.com/daviwil/emacs-from-scratch/issues/new][file an issue]] or send me an email at =david at systemcrafters.cc=.
+首先，我们设置一些常见变量，方便后续的配置和操作。
 
-The following variables are used to tweak some of the configuration pieces for use in the live streams so you might need to adjust them for your local machine if you try to use this configuration directly.
 
 #+begin_src emacs-lisp
 
@@ -23,11 +22,14 @@ The following variables are used to tweak some of the configuration pieces for u
 
 #+end_src
 
-* Tips for Use
+* 小贴士
 
-In this document I've added links in many places that lead you to documentation for the various packages we use.  If you're looking at this file in Emacs, you can put your cursor on a link and press =C-c C-o= or run =M-x org-open-at-point= to open the link in your web browser.
+本文中的链接，可以直接打开，你可以：
+1. 光标移动到连接，点击 =enter= 键
+2. 使用快捷键 =C-c C-o=
+3. 使用扩展命令 =M-x org-open-at-point=
 
-* Startup Performance
+* 优化启动
 
 #+begin_src emacs-lisp
 
@@ -45,7 +47,7 @@ In this document I've added links in many places that lead you to documentation 
 
 #+end_src
 
-* Package System Setup
+* 安装包管理
 
 Emacs has a built in package manager but it doesn't make it easy to automatically install packages on a new system the first time you pull down your configuration.  [[https://github.com/jwiegley/use-package][use-package]] is a really helpful package used in this configuration to make it a lot easier to automate the installation and configuration of everything else we use.
 
@@ -90,7 +92,7 @@ You can also use =M-x auto-package-update-now= to update right now!
 
 #+end_src
 
-* Loading Private Configuration
+* 加载个人配置
 
 ** Load my private modules helpers.
 
@@ -105,7 +107,7 @@ Here we just add some helper functions like =dropbox-path= and =workspace-path=
 #+RESULTS:
 : module-helper
 
-* Keep Folders Clean
+* 目录整洁
 
 We use the [[https://github.com/emacscollective/no-littering/blob/master/no-littering.el][no-littering]] package to keep folders where we edit files and the Emacs configuration folder clean!  It knows about a wide variety of variables for built in Emacs features as well as those from community packages so it can be much easier than finding and setting these variables yourself.
 
@@ -124,7 +126,7 @@ We use the [[https://github.com/emacscollective/no-littering/blob/master/no-litt
 
 #+end_src
 
-* Basic UI Configuration
+* 用户界面配置
 
 This section configures basic UI settings that remove unneeded elements to make Emacs look a lot more minimal and modern.  If you're just getting started in Emacs, the menu bar might be helpful so you can remove the =(menu-bar-mode -1)= line if you'd like to still see that.
 
@@ -205,7 +207,7 @@ I am using the [[https://github.com/tonsky/FiraCode][Fira Code]] and [[https://f
 
 #+RESULTS:
 
-* Keybinding Configuration
+* 键盘配置
 
 This configuration uses [[https://evil.readthedocs.io/en/latest/index.html][evil-mode]] for a Vi-like modal editing experience.  [[https://github.com/noctuid/general.el][general.el]] is used for easy keybinding configuration that integrates well with which-key.  [[https://github.com/emacs-evil/evil-collection][evil-collection]] is used to automatically configure various Emacs modes with Vi-like keybindings for evil-mode.
 
@@ -252,7 +254,7 @@ This configuration uses [[https://evil.readthedocs.io/en/latest/index.html][evil
 
 #+end_src
 
-* UI Configuration
+* 界面高级配置
 
 ** Command Log Mode
 
@@ -407,7 +409,7 @@ This is an example of using [[https://github.com/abo-abo/hydra][Hydra]] to desig
 
 #+end_src
 
-* Development
+* 软件开发
 ** Languages
 
 *** IDE Features with lsp-mode
@@ -885,7 +887,7 @@ Emacs' built in commenting functionality =comment-dwim= (usually bound to =M-;=)
 #+RESULTS:
 : t
 
-* Terminals
+* 终端设置
 ** term-mode
 
 =term-mode= is a built-in terminal emulator in Emacs.  Because it is written in Emacs Lisp, you can start using it immediately with very little configuration.  If you are on Linux or macOS, =term-mode= is a great choice to get started because it supports fairly complex terminal applications (=htop=, =vim=, etc) and works pretty reliably.  However, because it is written in Emacs Lisp, it can be slower than other options like =vterm=.  The speed will only be an issue if you regularly run console apps with a lot of output.
@@ -1019,7 +1021,7 @@ For more thoughts on Eshell, check out these articles by Pierre Neidhardt:
 
 #+end_src
 
-* File Management
+* 文件管理
 
 ** Dired
 
@@ -1125,7 +1127,7 @@ current directory, instead of this Dired buffer's current directory.
 
 #+end_src
 
-* Applications
+* 应用程序
 
 ** Some App
 
@@ -1200,7 +1202,7 @@ This is an example of configuring another non-Emacs application using org-mode. 
 
 #+end_src
 
-* Runtime Performance
+* 运行时表现
 
 Dial the GC threshold back down so that garbage collection happens more frequently but in less time.
 
@@ -1382,7 +1384,7 @@ This snippet adds a hook to =org-mode= buffers so that =efs/org-babel-tangle-con
 #+begin_src emacs-lisp
   (require 'module-org)
 #+end_src
-* Loading Private Keybinds 
+* 个人键绑定 
 All common binds in one file for better migration!!! Powered by =general=
 
 Instead of using =doom= macros like =map!=, which is not very convenient to migrate.
@@ -1391,7 +1393,7 @@ Instead of using =doom= macros like =map!=, which is not very convenient to migr
   (require 'module-keybinds)
 #+end_src
 
-* Load my private  information
+* 个人信息
 #+begin_src emacs-lisp
 (setq user-full-name "Xing Wenju"
       user-mail-address "linuxing3@qq.com")
