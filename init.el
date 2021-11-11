@@ -336,7 +336,7 @@
     :config (counsel-projectile-mode))
 
   (use-package evil-nerd-commenter
-    :bind ("M-/" . evilnc-comment-or-uncomment-lines))
+    :bind ("C-/" . evilnc-comment-or-uncomment-lines))
 
 (use-package prodigy
   :load-path "./localelpa/prodigy"
@@ -372,7 +372,7 @@
           :kill-process-buffer-on-stop t))
 
 (use-package hl-todo
-  :load-path "./localelpa/hl-tod"
+  :load-path "./localelpa/hl-todo"
   :hook (prog-mode . hl-todo-mode)
   :commands hl-todo-mode
   :config
