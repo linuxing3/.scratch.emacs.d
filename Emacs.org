@@ -1,4 +1,4 @@
-﻿#+title: Emacs From Scratch Configuration
+#+title: Emacs From Scratch Configuration
 #+PROPERTY: header-args:emacs-lisp :tangle ./init.el :mkdirp yes
 
 * 欢迎辞!
@@ -21,6 +21,23 @@
   (defvar efs/frame-transparency '(90 . 90))
 
 #+end_src
+
+#+begin_src emacs-lisp
+    (prefer-coding-system 'utf-8)
+    (setq locale-coding-system 'utf-8)
+
+    (set-language-environment 'utf-8)
+    (set-default-coding-systems 'utf-8)
+    (set-buffer-file-coding-system 'utf-8)
+    (set-clipboard-coding-system 'utf-8)
+    (set-file-name-coding-system 'utf-8)
+
+    (setq org-export-coding-system 'utf-8)
+
+#+end_src
+
+#+RESULTS:
+: utf-8
 
 * 小贴士
 
@@ -1278,6 +1295,8 @@ This section contains the basic configuration for =org-mode= plus the configurat
     :commands (org-capture org-agenda)
     :hook (org-mode . efs/org-mode-setup)
     :config
+    (setq-default org-display-custom-times t)
+    (setq org-time-stamp-custom-formats '("<%Y-%m-%d>" . "<%Y-%m-%d %H:%M>"))
     (setq org-ellipsis " ▾")
 
     (setq org-agenda-start-with-log-mode t)
@@ -1301,6 +1320,9 @@ This section contains the basic configuration for =org-mode= plus the configurat
     (efs/org-font-setup))
 
 #+end_src
+
+#+RESULTS:
+| org-fancy-priorities-mode | org-superstar-mode | org-tempo-setup | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-show-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes | (lambda nil (add-hook 'after-save-hook #'efs/org-babel-tangle-config)) | efs/org-mode-visual-fill | org-bullets-mode | efs/org-mode-setup | (lambda nil (display-line-numbers-mode 0)) |
 
 *** Nicer Heading Bullets
 

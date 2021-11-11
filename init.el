@@ -8,6 +8,17 @@
   ;; Make frame transparency overridable
   (defvar efs/frame-transparency '(90 . 90))
 
+    (prefer-coding-system 'utf-8)
+    (setq locale-coding-system 'utf-8)
+
+    (set-language-environment 'utf-8)
+    (set-default-coding-systems 'utf-8)
+    (set-buffer-file-coding-system 'utf-8)
+    (set-clipboard-coding-system 'utf-8)
+    (set-file-name-coding-system 'utf-8)
+
+    (setq org-export-coding-system 'utf-8)
+
   ;; The default is 800 kilobytes.  Measured in bytes.
   (setq gc-cons-threshold (* 50 1000 1000))
 
@@ -635,6 +646,8 @@
     :commands (org-capture org-agenda)
     :hook (org-mode . efs/org-mode-setup)
     :config
+    (setq-default org-display-custom-times t)
+    (setq org-time-stamp-custom-formats '("<%Y-%m-%d>" . "<%Y-%m-%d %H:%M>"))
     (setq org-ellipsis " ▾")
 
     (setq org-agenda-start-with-log-mode t)
