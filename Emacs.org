@@ -410,7 +410,7 @@ This is an example of using [[https://github.com/abo-abo/hydra][Hydra]] to desig
 #+end_src
 
 * 软件开发
-** Languages
+** 语言 Languages
 
 *** IDE Features with lsp-mode
 
@@ -661,7 +661,7 @@ You can use the pyvenv package to use =virtualenv= environments in Emacs.  The =
                                      :cwd nil)))
 
 #+end_src
-** Company Mode
+** 补全 Company Mode
 
 [[http://company-mode.github.io/][Company Mode]] provides a nicer in-buffer completion interface than =completion-at-point= which is more reminiscent of what you would expect from an IDE.  We add a simple configuration to make the keybindings a little more useful (=TAB= now completes the selection and initiates completion at the current location if needed).
 
@@ -685,7 +685,7 @@ We also use [[https://github.com/sebastiencs/company-box][company-box]] to furth
 
 #+end_src
 
-** Projectile
+** 项目 Projectile
 
 [[https://projectile.mx/][Projectile]] is a project management library for Emacs which makes it a lot easier to navigate around code projects for various languages.  Many packages integrate with Projectile so it's a good idea to have it installed even if you don't use its commands directly.
 
@@ -709,7 +709,7 @@ We also use [[https://github.com/sebastiencs/company-box][company-box]] to furth
 
 #+end_src
 
-** Magit
+** 版本 Magit
 
 [[https://magit.vc/][Magit]] is the best Git interface I've ever used.  Common Git operations are easy to execute quickly using Magit's command panel system.
 
@@ -728,7 +728,7 @@ We also use [[https://github.com/sebastiencs/company-box][company-box]] to furth
 
 #+end_src
 
-** Commenting
+** 注释 Commenting
 
 Emacs' built in commenting functionality =comment-dwim= (usually bound to =M-;=) doesn't always comment things in the way you might expect so we use [[https://github.com/redguardtoo/evil-nerd-commenter][evil-nerd-commenter]] to provide a more familiar behavior.  I've bound it to =M-/= since other editors sometimes use this binding but you could also replace Emacs' =M-;= binding with this command.
 
@@ -739,7 +739,7 @@ Emacs' built in commenting functionality =comment-dwim= (usually bound to =M-;=)
 
 #+end_src
 
-** External Services
+** 服务 External Services
 #+begin_src emacs-lisp
 (use-package prodigy
   :load-path "./localelpa/prodigy"
@@ -779,7 +779,7 @@ Emacs' built in commenting functionality =comment-dwim= (usually bound to =M-;=)
 #+RESULTS:
 : t
 
-** Highlight todo
+** 高亮 Highlight todo
 
 #+begin_src emacs-lisp
 (use-package hl-todo
@@ -803,7 +803,7 @@ Emacs' built in commenting functionality =comment-dwim= (usually bound to =M-;=)
 #+RESULTS:
 | hl-todo-mode | rainbow-delimiters-mode |
 
-** Rainbow Delimiters
+** 彩色 Rainbow Delimiters
 
 [[https://github.com/Fanael/rainbow-delimiters][rainbow-delimiters]] is useful in programming modes because it colorizes nested parentheses and brackets according to their nesting depth.  This makes it a lot easier to visually match parentheses in Emacs Lisp code without having to count them yourself.
 
@@ -814,7 +814,7 @@ Emacs' built in commenting functionality =comment-dwim= (usually bound to =M-;=)
 
 #+end_src
 
-** [修改中] Snippets
+** 代码片段 Snippets
 
 #+begin_src emacs-lisp
 ;; yasnippet mode
@@ -1217,7 +1217,7 @@ Dial the GC threshold back down so that garbage collection happens more frequent
 
 [[https://orgmode.org/][Org Mode]] is one of the hallmark features of Emacs.  It is a rich document editor, project planner, task and time tracker, blogging engine, and literate coding utility all wrapped up in one package.
 
-** Better Font Faces
+** 字体 Better Font Faces
 
 The =efs/org-font-setup= function configures various text faces to tweak the sizes of headings and use variable width fonts in most cases so that it looks more like we're editing a document in =org-mode=.  We switch back to fixed width (monospace) fonts for code blocks and tables so that they display correctly.
 
@@ -1258,7 +1258,7 @@ The =efs/org-font-setup= function configures various text faces to tweak the siz
 #+RESULTS:
 : efs/org-font-setup
 
-** Basic Config
+** 基本配置 Basic Config
 
 This section contains the basic configuration for =org-mode= plus the configuration for Org agendas and capture templates.  There's a lot to unpack in here so I'd recommend watching the videos for [[https://youtu.be/VcgjTEa0kU4][Part 5]] and [[https://youtu.be/PNE-mgkZ6HM][Part 6]] for a full explanation.
 
@@ -1327,7 +1327,7 @@ We use [[https://github.com/joostkremers/visual-fill-column][visual-fill-column]
 
 #+end_src
 
-** Configure Babel Languages
+** 编程 Configure Babel Languages
 
 To execute or export code in =org-mode= code blocks, you'll need to set up =org-babel-load-languages= for each language you'd like to use.  [[https://orgmode.org/worg/org-contrib/babel/languages.html][This page]] documents all of the languages that you can use with =org-babel=.
 
@@ -1343,7 +1343,7 @@ To execute or export code in =org-mode= code blocks, you'll need to set up =org-
 
 #+end_src
 
-** Structure Templates
+** 结构模板 Structure Templates
 
 Org Mode's [[https://orgmode.org/manual/Structure-Templates.html][structure templates]] feature enables you to quickly insert code blocks into your Org files in combination with =org-tempo= by typing =<= followed by the template name like =el= or =py= and then press =TAB=.  For example, to insert an empty =emacs-lisp= block below, you can type =<el= and press =TAB= to expand into such a block.
 
@@ -1361,7 +1361,7 @@ You can add more =src= block templates below by copying one of the lines and cha
 
 #+end_src
 
-** Auto-tangle Configuration Files
+** 自动生成 Auto-tangle Configuration Files
 
 This snippet adds a hook to =org-mode= buffers so that =efs/org-babel-tangle-config= gets executed each time such a buffer gets saved.  This function checks to see if the file being saved is the Emacs.org file you're looking at right now, and if so, automatically exports the configuration here to the associated output files.
 
@@ -1379,7 +1379,7 @@ This snippet adds a hook to =org-mode= buffers so that =efs/org-babel-tangle-con
 
 #+end_src
 
-** [学习] Loading Private Org Configuration
+** 加载个人配置 Loading Private Org Configuration
 
 #+begin_src emacs-lisp
   (require 'module-org)
