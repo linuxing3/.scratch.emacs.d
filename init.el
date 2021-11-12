@@ -23,9 +23,9 @@
   ;; Initialize package sources
   (require 'package)
 
-  (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                           ("org" . "https://orgmode.org/elpa/")
-                           ("elpa" . "https://elpa.gnu.org/packages/")))
+ ;; (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+ ;;                         ("org" . "https://orgmode.org/elpa/")
+ ;;                          ("elpa" . "https://elpa.gnu.org/packages/")))
 
   (setq package-archives '(("gnu"   . "http://mirrors.cloud.tencent.com/elpa/gnu/")
                        ("melpa" . "http://mirrors.cloud.tencent.com/elpa/melpa/")
@@ -333,8 +333,8 @@
     ("C-c p" . projectile-command-map)
     :init
     ;; NOTE: Set this to the folder where you keep your Git repos!
-    (when (file-directory-p "~/emacs-repos/emacs-from-scratch")
-      (setq projectile-project-search-path '("~/emacs-repos/emacs-from-scratch")))
+    (when (file-directory-p "~/workspace")
+      (setq projectile-project-search-path '("~/workspace")))
     (setq projectile-switch-project-action #'projectile-dired))
 
   (use-package counsel-projectile
