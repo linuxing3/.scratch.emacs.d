@@ -11,6 +11,9 @@ We use the excellent [[https://github.com/ch11ng/exwm][EXWM]] module as the basi
 
 #+begin_src emacs-lisp
 
+  (require 'exwm)
+  (require 'exwm-config)
+
   (defun efs/run-in-background (command)
     (let ((command-parts (split-string command "[ ]+")))
       (apply #'call-process `(,(car command-parts) nil 0 nil ,@(cdr command-parts)))))
@@ -39,11 +42,11 @@ We use the excellent [[https://github.com/ch11ng/exwm][EXWM]] module as the basi
     ;; Also take a look at display-time-format and format-time-string
 
     ;; Start the Polybar panel
-    (efs/start-panel)
+    ;; (efs/start-panel)
 
     ;; Launch apps that will run in the background
     (efs/run-in-background "dunst")
-    (efs/run-in-background "nm-applet")
+    ;; (efs/run-in-background "nm-applet")
     (efs/run-in-background "pasystray")
     (efs/run-in-background "blueman-applet"))
 
@@ -114,11 +117,12 @@ We use the excellent [[https://github.com/ch11ng/exwm][EXWM]] module as the basi
     ;; Set the screen resolution (update this to be the correct resolution for your screen!)
     (require 'exwm-randr)
     (exwm-randr-enable)
-    (start-process-shell-command "xrandr" nil "xrandr --output Virtual-1 --primary --mode 2048x1152 --pos 0x0 --rotate normal")
+    ;;  (start-process-shell-command "xrandr" nil "xrandr --output Virtual-1 --primary --mode 2048x1152 --pos 0x0 --rotate normal")
+     (start-process-shell-command "xrandr" nil "xrandr --output HDMI-1 --auto")
 
     ;; This will need to be updated to the name of a display!  You can find
     ;; the names of your displays by looking at arandr or the output of xrandr
-    (setq exwm-randr-workspace-monitor-plist '(2 "Virtual-2" 3 "Virtual-2"))
+    (setq exwm-randr-workspace-monitor-plist '(1 "HDMI-1" 3 "HDMI-1"))
 
     ;; NOTE: Uncomment these lines after setting up autorandr!
     ;; React to display connectivity changes, do initial display update
