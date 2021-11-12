@@ -14,8 +14,8 @@
   ;;       in Emacs and init.el will be generated automatically!
 
   ;; You will most likely need to adjust this font size for your system!
-  (defvar efs/default-font-size 180)
-  (defvar efs/default-variable-font-size 180)
+  (defvar efs/default-font-size 140)
+  (defvar efs/default-variable-font-size 140)
 
   ;; Make frame transparency overridable
   (defvar efs/frame-transparency '(90 . 90))
@@ -74,9 +74,14 @@ Emacs has a built in package manager but it doesn't make it easy to automaticall
   ;; Initialize package sources
   (require 'package)
 
-  (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                           ("org" . "https://orgmode.org/elpa/")
-                           ("elpa" . "https://elpa.gnu.org/packages/")))
+  ;; (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+  ;;                          ("org" . "https://orgmode.org/elpa/")
+  ;;                          ("elpa" . "https://elpa.gnu.org/packages/")))
+  ;; ------ 腾讯源 ------
+  (setq package-archives '(("gnu"   . "http://mirrors.cloud.tencent.com/elpa/gnu/")
+  			 ("melpa" . "http://mirrors.cloud.tencent.com/elpa/melpa/")
+  			 ("melpa-stable" . "http://mirrors.cloud.tencent.com/elpa/melpa-stable/")
+  			 ("org" . "http://mirrors.cloud.tencent.com/elpa/org/")))
 
   (package-initialize)
   (unless package-archive-contents
@@ -124,7 +129,7 @@ Here we just add some helper functions like =dropbox-path= and =workspace-path=
 #+end_src
 
 #+RESULTS:
-: module-helper
+: core-helper
 
 * 目录整洁
 
@@ -274,7 +279,116 @@ This configuration uses [[https://evil.readthedocs.io/en/latest/index.html][evil
 #+end_src
 
 * 界面高级配置
+** Embark keybinding
 
+#+begin_src emacs-lisp
+(use-package marginalia
+  :ensure t
+  :config
+  (marginalia-mode))
+
+(use-package embark
+  :ensure t
+  :bind
+  (("C-." . embark-act)         ;; pick some comfortable binding
+   ("M-." . embark-dwim)        ;; good alternative: M-.
+   ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+  :init
+  ;; Optionally replace the key help with a completing-read interface
+  (setq prefix-help-command #'embark-prefix-help-command)
+  :config
+  ;; Hide the mode line of the Embark live/completions buffers
+  (embark-define-keymap embark-file-map
+    ("d" delete-file)
+    ("r" rename-file)
+    ("c" copy-file))
+  (add-to-list 'display-buffer-alist
+               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                 nil
+                 (window-parameters (mode-line-format . none)))))
+
+(use-package consult)
+
+;; Consult users will also want the embark-consult package.
+(use-package embark-consult
+  :ensure t
+  :after (embark consult)
+  :demand t ; only necessary if you have the hook below
+  ;; if you want to have consult previews as you move around an
+  ;; auto-updating embark collect buffer
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
+
+#+end_src
+
+扩展Embark的功能
+
+比如我们针对Emacs 27的新标签功能，提供针对 tab的行为
+
+(1)  让Embark知道命令用于操作标签
+
+(2) 定义一个标签行为的键图并配置Embark，使得其知道所需键图
+
+然后执行 =my-select-tab-by-name= , 按下 =C-.= 触发Embark Act，就可以看到新增加的 =改名= 等命令了！
+
+#+begin_src emacs-lisp
+(add-to-list 'marginalia-prompt-categories '("tab by name" . tab))
+;; 启动命令
+(defun my-select-tab-by-name (tab)
+  (interactive
+   (list
+    (let ((tab-list (or (mapcar #'(lambda (tab) (cdr (assq 'name tab)))
+                                (tab-bar-tabs))
+                        (user-error "No tabs found"))))
+      (consult--read tab-list
+                     :prompt "Tabs: "
+                     :category 'tab))))
+  (tab-bar-select-tab-by-name tab))
+
+;; 添加标签行为
+(embark-define-keymap embark-tab-actions
+  "Keymap for actions for tab-bar tabs (when mentioned by name)."
+  ("s" tab-bar-select-tab-by-name)
+  ("r" tab-bar-rename-tab-by-name)
+  ("k" tab-bar-close-tab-by-name))
+
+(add-to-list 'embark-keymap-alist '(tab . embark-tab-actions))
+
+;; 关闭前提醒
+(add-to-list 'embark-allow-edit-actions 'tab-bar-close-tab-by-name)
+(defun my-confirm-close-tab-by-name (tab)
+  (interactive "sTab to close: ")
+  (when (y-or-n-p (format "Close tab '%s'? " tab))
+    (tab-bar-close-tab-by-name tab)))
+    
+
+#+end_src
+
+#+RESULTS:
+: my-confirm-close-tab-by-name
+
+打开 =wikipedia= 链接
+
+#+begin_src emacs-lisp
+(defun my-short-wikipedia-link ()
+  "Target a link at point of the form wikipedia:Page_Name."
+  (save-excursion
+    (let* ((beg (progn (skip-chars-backward "[:alnum:]_:") (point)))
+           (end (progn (skip-chars-forward "[:alnum:]_:") (point)))
+           (str (buffer-substring-no-properties beg end)))
+      (save-match-data
+        (when (string-match "wikipedia:\\([[:alnum:]_]+\\)" str)
+          `(url 
+            (format "https://en.wikipedia.org/wiki/%s" (match-string 1 str))
+            ,beg . ,end))))))
+
+(add-to-list 'embark-target-finders 'my-short-wikipedia-link)
+#+end_src
+
+#+RESULTS:
+| my-short-wikipedia-link | embark--ivy-selected | embark-target-top-minibuffer-completion | embark-target-active-region | embark-target-collect-candidate | embark-target-completion-at-point | embark-target-bug-reference-at-point | embark-target-url-at-point | embark-target-file-at-point | embark-target-identifier-at-point | embark-target-library-file-at-point | embark-target-custom-variable-at-point | embark-target-expression-at-point | embark-target-sentence-at-point | embark-target-paragraph-at-point | embark-target-defun-at-point |
+
+wikipedia:Garry_Kasparov 
 ** Command Log Mode
 
 [[https://github.com/lewang/command-log-mode][command-log-mode]] is useful for displaying a panel showing each key binding you use in a panel on the right side of the frame.  Great for live streams and screencasts!
@@ -410,7 +524,7 @@ This Prescient configuration is optimized for use in System Crafters videos and 
 
 ** Text Scaling
 
-This is an example of using [[https://github.com/abo-abo/hydra][Hydra]] to design a transient key binding for quickly adjusting the scale of the text on screen.  We define a hydra that is bound to =C-s t s= and, once activated, =j= and =k= increase and decrease the text scale.  You can press any other key (or =f= specifically) to exit the transient key map.
+This is an example of using [[https://github.com/abo-abo/hydra][Hydra]] to design a transient key binding for quickly adjusting the scale of the text on screen.  We define a hydra that is bound to =C-s c s= and, once activated, =j= and =k= increase and decrease the text scale.  You can press any other key (or =f= specifically) to exit the transient key map.
 
 #+begin_src emacs-lisp
 
@@ -424,7 +538,7 @@ This is an example of using [[https://github.com/abo-abo/hydra][Hydra]] to desig
     ("f" nil "finished" :exit t))
 
   (efs/leader-keys
-    "ts" '(hydra-text-scale/body :which-key "scale text"))
+    "cs" '(hydra-text-scale/body :which-key "scale text"))
 
 #+end_src
 
@@ -448,7 +562,7 @@ The =which-key= integration adds helpful descriptions of the various keys so you
     (lsp-headerline-breadcrumb-mode))
 
   (use-package lsp-mode
-    :load-path "./localelpa/lsp-mode"
+    ;;:load-path "./localelpa/lsp-mode"
     :commands (lsp lsp-deferred)
     :hook (lsp-mode . efs/lsp-mode-setup)
     :init
@@ -468,7 +582,7 @@ The =which-key= integration adds helpful descriptions of the various keys so you
 #+begin_src emacs-lisp
  
   (use-package lsp-ui
-    :load-path "./localelpa/lsp-ui"
+    ;;:load-path "./localelpa/lsp-ui"
     :hook (lsp-mode . lsp-ui-mode)
     :custom
     (lsp-ui-doc-position 'bottom))
@@ -493,7 +607,7 @@ This package is built on the [[https://github.com/Alexander-Miller/treemacs][tre
 #+begin_src emacs-lisp
 
   (use-package lsp-treemacs
-    :load-path "./localelpa/lsp-treemacs"
+    ;;:load-path "./localelpa/lsp-treemacs"
     :after lsp)
 
 #+end_src
@@ -512,7 +626,7 @@ Try these commands with =M-x=:
 #+begin_src emacs-lisp :tangle yes
 
   (use-package lsp-ivy
-    :load-path "./localelpa/lsp-ivy"
+    ;;:load-path "./localelpa/lsp-ivy"
     :after lsp)
 
 #+end_src
@@ -523,10 +637,10 @@ Try these commands with =M-x=:
 
 [[https://emacs-lsp.github.io/dap-mode/][dap-mode]] is an excellent package for bringing rich debugging capabilities to Emacs via the [[https://microsoft.github.io/debug-adapter-protocol/][Debug Adapter Protocol]].  You should check out the [[https://emacs-lsp.github.io/dap-mode/page/configuration/][configuration docs]] to learn how to configure the debugger for your language.  Also make sure to check out the documentation for the debug adapter to see what configuration parameters are available to use for your debug templates!
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
 
   (use-package dap-mode
-    :load-path "./localelpa/dap-mode"
+    ;;:load-path "./localelpa/dap-mode"
     ;; Uncomment the config below if you want all UI panes to be hidden by default!
     ;; :custom
     ;; (lsp-enable-dap-auto-configure nil)
@@ -536,6 +650,8 @@ Try these commands with =M-x=:
     :config
     ;; Set up Node debugging
     (require 'dap-node)
+    (require 'dap-python)
+    (require 'dap-pwsh)
     (dap-node-setup) ;; Automatically installs Node debug adapter if needed
 
     ;; Bind `C-c l d` to `dap-hydra` for easy access
@@ -552,7 +668,7 @@ Try these commands with =M-x=:
 
 This is a basic configuration for the TypeScript language so that =.ts= files activate =typescript-mode= when opened.  We're also adding a hook to =typescript-mode-hook= to call =lsp-deferred= so that we activate =lsp-mode= to get LSP features every time we edit TypeScript code.
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
 
   (use-package typescript-mode
     :mode "\\.ts\\'"
@@ -562,8 +678,6 @@ This is a basic configuration for the TypeScript language so that =.ts= files ac
 
 #+end_src
 
-#+RESULTS:
-: ((\.odc\' . archive-mode) (\.odf\' . archive-mode) (\.odi\' . archive-mode) (\.otp\' . archive-mode) (\.odp\' . archive-mode) (\.otg\' . archive-mode) (\.odg\' . archive-mode) (\.ots\' . archive-mode) (\.ods\' . archive-mode) (\.odm\' . archive-mode) (\.ott\' . archive-mode) (\.odt\' . archive-mode) (\.gpg\(~\|\.~[0-9]+~\)?\' nil epa-file) (/git-rebase-todo\' . git-rebase-mode) (\.\(?:md\|markdown\|mkd\|mdown\|mkdn\|mdwn\)\' . markdown-mode) (\.ts\' . typescript-mode) (\.elc\' . elisp-byte-code-mode) (\.zst\' nil jka-compr) (\.dz\' nil jka-compr) (\.xz\' nil jka-compr) (\.lzma\' nil jka-compr) (\.lz\' nil jka-compr) (\.g?z\' nil jka-compr) (\.bz2\' nil jka-compr) (\.Z\' nil jka-compr) (\.vr[hi]?\' . vera-mode) (\(?:\.\(?:rbw?\|ru\|rake\|thor\|jbuilder\|rabl\|gemspec\|podspec\)\|/\(?:Gem\|Rake\|Cap\|Thor\|Puppet\|Berks\|Vagrant\|Guard\|Pod\)file\)\' . ruby-mode) (\.re?st\' . rst-mode) (\.py[iw]?\' . python-mode) (\.m\' . octave-maybe-mode) (\.less\' . less-css-mode) (\.scss\' . scss-mode) (\.awk\' . awk-mode) (\.\(u?lpc\|pike\|pmod\(\.in\)?\)\' . pike-mode) (\.idl\' . idl-mode) (\.java\' . java-mode) (\.m\' . objc-mode) (\.ii\' . c++-mode) (\.i\' . c-mode) (\.lex\' . c-mode) (\.y\(acc\)?\' . c-mode) (\.h\' . c-or-c++-mode) (\.c\' . c-mode) (\.\(CC?\|HH?\)\' . c++-mode) (\.[ch]\(pp\|xx\|\+\+\)\' . c++-mode) (\.\(cc\|hh\)\' . c++-mode) (\.\(bat\|cmd\)\' . bat-mode) (\.[sx]?html?\(\.[a-zA-Z_]+\)?\' . mhtml-mode) (\.svgz?\' . image-mode) (\.svgz?\' . xml-mode) (\.x[bp]m\' . image-mode) (\.x[bp]m\' . c-mode) (\.p[bpgn]m\' . image-mode) (\.tiff?\' . image-mode) (\.gif\' . image-mode) (\.png\' . image-mode) (\.jpe?g\' . image-mode) (\.te?xt\' . text-mode) (\.[tT]e[xX]\' . tex-mode) (\.ins\' . tex-mode) (\.ltx\' . latex-mode) (\.dtx\' . doctex-mode) (\.org\' . org-mode) (\.el\' . emacs-lisp-mode) (Project\.ede\' . emacs-lisp-mode) (\.\(scm\|stk\|ss\|sch\)\' . scheme-mode) (\.l\' . lisp-mode) (\.li?sp\' . lisp-mode) (\.[fF]\' . fortran-mode) (\.for\' . fortran-mode) (\.p\' . pascal-mode) (\.pas\' . pascal-mode) (\.\(dpr\|DPR\)\' . delphi-mode) (\.ad[abs]\' . ada-mode) (\.ad[bs]\.dg\' . ada-mode) (\.\([pP]\([Llm]\|erl\|od\)\|al\)\' . perl-mode) (Imakefile\' . makefile-imake-mode) (Makeppfile\(?:\.mk\)?\' . makefile-makepp-mode) (\.makepp\' . makefile-makepp-mode) (\.mk\' . makefile-gmake-mode) (\.make\' . makefile-gmake-mode) ([Mm]akefile\' . makefile-gmake-mode) (\.am\' . makefile-automake-mode) (\.texinfo\' . texinfo-mode) (\.te?xi\' . texinfo-mode) (\.[sS]\' . asm-mode) (\.asm\' . asm-mode) (\.css\' . css-mode) (\.mixal\' . mixal-mode) (\.gcov\' . compilation-mode) (/\.[a-z0-9-]*gdbinit . gdb-script-mode) (-gdb\.gdb . gdb-script-mode) ([cC]hange\.?[lL]og?\' . change-log-mode) ([cC]hange[lL]og[-.][0-9]+\' . change-log-mode) (\$CHANGE_LOG\$\.TXT . change-log-mode) (\.scm\.[0-9]*\' . scheme-mode) (\.[ckz]?sh\'\|\.shar\'\|/\.z?profile\' . sh-mode) (\.bash\' . sh-mode) (\(/\|\`\)\.\(bash_\(profile\|history\|log\(in\|out\)\)\|z?log\(in\|out\)\)\' . sh-mode) (\(/\|\`\)\.\(shrc\|zshrc\|m?kshrc\|bashrc\|t?cshrc\|esrc\)\' . sh-mode) (\(/\|\`\)\.\([kz]shenv\|xinitrc\|startxrc\|xsession\)\' . sh-mode) (\.m?spec\' . sh-mode) (\.m[mes]\' . nroff-mode) (\.man\' . nroff-mode) (\.sty\' . latex-mode) (\.cl[so]\' . latex-mode) (\.bbl\' . latex-mode) (\.bib\' . bibtex-mode) (\.bst\' . bibtex-style-mode) (\.sql\' . sql-mode) (\(acinclude\|aclocal\|acsite\)\.m4\' . autoconf-mode) (\.m[4c]\' . m4-mode) (\.mf\' . metafont-mode) (\.mp\' . metapost-mode) (\.vhdl?\' . vhdl-mode) (\.article\' . text-mode) (\.letter\' . text-mode) (\.i?tcl\' . tcl-mode) (\.exp\' . tcl-mode) (\.itk\' . tcl-mode) (\.icn\' . icon-mode) (\.sim\' . simula-mode) (\.mss\' . scribe-mode) (\.f9[05]\' . f90-mode) (\.f0[38]\' . f90-mode) (\.indent\.pro\' . fundamental-mode) (\.\(pro\|PRO\)\' . idlwave-mode) (\.srt\' . srecode-template-mode) (\.prolog\' . prolog-mode) (\.tar\' . tar-mode) (\.\(arc\|zip\|lzh\|lha\|zoo\|[jew]ar\|xpi\|rar\|cbr\|7z\|ARC\|ZIP\|LZH\|LHA\|ZOO\|[JEW]AR\|XPI\|RAR\|CBR\|7Z\)\' . archive-mode) (\.oxt\' . archive-mode) (\.\(deb\|[oi]pk\)\' . archive-mode) (\`/tmp/Re . text-mode) (/Message[0-9]*\' . text-mode) (\`/tmp/fol/ . text-mode) (\.oak\' . scheme-mode) (\.sgml?\' . sgml-mode) (\.x[ms]l\' . xml-mode) (\.dbk\' . xml-mode) (\.dtd\' . sgml-mode) (\.ds\(ss\)?l\' . dsssl-mode) (\.js[mx]?\' . javascript-mode) (\.har\' . javascript-mode) (\.json\' . javascript-mode) (\.[ds]?va?h?\' . verilog-mode) (\.by\' . bovine-grammar-mode) (\.wy\' . wisent-grammar-mode) ([:/\]\..*\(emacs\|gnus\|viper\)\' . emacs-lisp-mode) (\`\..*emacs\' . emacs-lisp-mode) ([:/]_emacs\' . emacs-lisp-mode) (/crontab\.X*[0-9]+\' . shell-script-mode) (\.ml\' . lisp-mode) (\.ld[si]?\' . ld-script-mode) (ld\.?script\' . ld-script-mode) (\.xs\' . c-mode) (\.x[abdsru]?[cnw]?\' . ld-script-mode) (\.zone\' . dns-mode) (\.soa\' . dns-mode) (\.asd\' . lisp-mode) (\.\(asn\|mib\|smi\)\' . snmp-mode) (\.\(as\|mi\|sm\)2\' . snmpv2-mode) (\.\(diffs?\|patch\|rej\)\' . diff-mode) (\.\(dif\|pat\)\' . diff-mode) (\.[eE]?[pP][sS]\' . ps-mode) (\.\(?:PDF\|DVI\|OD[FGPST]\|DOCX\|XLSX?\|PPTX?\|pdf\|djvu\|dvi\|od[fgpst]\|docx\|xlsx?\|pptx?\)\' . doc-view-mode-maybe) (configure\.\(ac\|in\)\' . autoconf-mode) (\.s\(v\|iv\|ieve\)\' . sieve-mode) (BROWSE\' . ebrowse-tree-mode) (\.ebrowse\' . ebrowse-tree-mode) (#\*mail\* . mail-mode) (\.g\' . antlr-mode) (\.mod\' . m2-mode) (\.ses\' . ses-mode) (\.docbook\' . sgml-mode) (\.com\' . dcl-mode) (/config\.\(?:bat\|log\)\' . fundamental-mode) (/\.\(authinfo\|netrc\)\' . authinfo-mode) (\.\(?:[iI][nN][iI]\|[lL][sS][tT]\|[rR][eE][gG]\|[sS][yY][sS]\)\' . conf-mode) (\.la\' . conf-unix-mode) (\.ppd\' . conf-ppd-mode) (java.+\.conf\' . conf-javaprop-mode) (\.properties\(?:\.[a-zA-Z0-9._-]+\)?\' . conf-javaprop-mode) (\.toml\' . conf-toml-mode) (\.desktop\' . conf-desktop-mode) (/\.redshift\.conf\' . conf-windows-mode) (\`/etc/\(?:DIR_COLORS\|ethers\|.?fstab\|.*hosts\|lesskey\|login\.?de\(?:fs\|vperm\)\|magic\|mtab\|pam\.d/.*\|permissions\(?:\.d/.+\)?\|protocols\|rpc\|services\)\' . conf-space-mode) (\`/etc/\(?:acpid?/.+\|aliases\(?:\.d/.+\)?\|default/.+\|group-?\|hosts\..+\|inittab\|ksysguarddrc\|opera6rc\|passwd-?\|shadow-?\|sysconfig/.+\)\' . conf-mode) ([cC]hange[lL]og[-.][-0-9a-z]+\' . change-log-mode) (/\.?\(?:gitconfig\|gnokiirc\|hgrc\|kde.*rc\|mime\.types\|wgetrc\)\' . conf-mode) (/\.\(?:asound\|enigma\|fetchmail\|gltron\|gtk\|hxplayer\|mairix\|mbsync\|msmtp\|net\|neverball\|nvidia-settings-\|offlineimap\|qt/.+\|realplayer\|reportbug\|rtorrent\.\|screen\|scummvm\|sversion\|sylpheed/.+\|xmp\)rc\' . conf-mode) (/\.\(?:gdbtkinit\|grip\|mpdconf\|notmuch-config\|orbital/.+txt\|rhosts\|tuxracer/options\)\' . conf-mode) (/\.?X\(?:default\|resource\|re\)s\> . conf-xdefaults-mode) (/X11.+app-defaults/\|\.ad\' . conf-xdefaults-mode) (/X11.+locale/.+/Compose\' . conf-colon-mode) (/X11.+locale/compose\.dir\' . conf-javaprop-mode) (\.~?[0-9]+\.[0-9][-.0-9]*~?\' nil t) (\.\(?:orig\|in\|[bB][aA][kK]\)\' nil t) ([/.]c\(?:on\)?f\(?:i?g\)?\(?:\.[a-zA-Z0-9._-]+\)?\' . conf-mode-maybe) (\.[1-9]\' . nroff-mode) (\.art\' . image-mode) (\.avs\' . image-mode) (\.bmp\' . image-mode) (\.cmyk\' . image-mode) (\.cmyka\' . image-mode) (\.crw\' . image-mode) (\.dcr\' . image-mode) (\.dcx\' . image-mode) (\.dng\' . image-mode) (\.dpx\' . image-mode) (\.fax\' . image-mode) (\.hrz\' . image-mode) (\.icb\' . image-mode) (\.icc\' . image-mode) (\.icm\' . image-mode) (\.ico\' . image-mode) (\.icon\' . image-mode) (\.jbg\' . image-mode) (\.jbig\' . image-mode) (\.jng\' . image-mode) (\.jnx\' . image-mode) (\.miff\' . image-mode) (\.mng\' . image-mode) (\.mvg\' . image-mode) (\.otb\' . image-mode) (\.p7\' . image-mode) (\.pcx\' . image-mode) (\.pdb\' . image-mode) (\.pfa\' . image-mode) (\.pfb\' . image-mode) (\.picon\' . image-mode) (\.pict\' . image-mode) (\.rgb\' . image-mode) (\.rgba\' . image-mode) (\.tga\' . image-mode) (\.wbmp\' . image-mode) (\.webp\' . image-mode) (\.wmf\' . image-mode) (\.wpg\' . image-mode) (\.xcf\' . image-mode) (\.xmp\' . image-mode) (\.xwd\' . image-mode) (\.yuv\' . image-mode) (\.tgz\' . tar-mode) (\.tbz2?\' . tar-mode) (\.txz\' . tar-mode) (\.tzst\' . tar-mode))
 
 *Important note!*  For =lsp-mode= to work with TypeScript (and JavaScript) you will need to install a language server on your machine.  If you have Node.js installed, the easiest way to do that is by running the following command:
 
@@ -596,11 +710,19 @@ There are a number of other language servers for Python so if you find that =pyl
     :hook (python-mode . lsp-deferred)
     :custom
     ;; NOTE: Set these if Python 3 is called "python3" on your system!
-    ;; (python-shell-interpreter "python3")
-    ;; (dap-python-executable "python3")
+    (python-shell-interpreter "python3")
+    (dap-python-executable "python3")
     (dap-python-debugger 'debugpy)
     :config
-    (require 'dap-python))
+    (require 'dap-python)
+    (dap-register-debug-template "My App"
+        (list :type "python"
+                :args "-i"
+                :cwd nil
+                :env '(("DEBUG" . "1"))
+                :target-module (expand-file-name "~/src/myapp/.env/bin/myapp")
+                :request "launch"
+                :name "My App")))
 
 
 #+end_src
@@ -616,30 +738,16 @@ You can use the pyvenv package to use =virtualenv= environments in Emacs.  The =
 
 #+end_src
 
-*** [修改中] go
+*** [完成] go
+CLOSED: [2021-11-12 周五 16:17]
 #+begin_src emacs-lisp
 (use-package go-mode
-  :ensure t)
-
-(use-package go-eldoc
   :ensure t
-  :config
-  (set-face-attribute 'eldoc-highlight-function-argument nil
-                      :underline t :foreground "green"
-                      :weight 'bold)
-  :hook
-  go-mode 'go-eldoc-setup)
-
-(use-package lsp-mode
-  :load-path "./localelpa/lsp-mode"
-  :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-         (go-mode . lsp-deferred)
-         ;; if you want which-key integration
-         (lsp-mode . lsp-enable-which-key-integration))
-  :commands (lsp lsp-deferred)
+  :hook ((go-mode . lsp-deferred))
   :config
   (require 'dap-go)
-  (dap-register-debug-template
+  (dap-go-setup)
+  (if IS-WINDOWS (dap-register-debug-template
    "Launch Unoptimized Debug Package"
    (list :type "go"
 	 :request "launch"
@@ -649,28 +757,31 @@ You can use the pyvenv package to use =virtualenv= environments in Emacs.  The =
 	 :buildFlags "-gcflags '-N -l'"
 	 :args nil
 	 :env nil
-	 :envFile nil)))
+	 :envFile nil))))
+
+(use-package go-eldoc
+  :ensure t
+  :hook ((go-mode . go-eldoc-setup))
+  :config
+  (set-face-attribute 'eldoc-highlight-function-argument nil
+                      :underline t :foreground "green"
+                      :weight 'bold))
 
 #+end_src
 
 #+RESULTS:
-| lsp-enable-which-key-integration | lsp-ui-mode | efs/lsp-mode-setup |
+| go-eldoc |
 
-*** [修改中] rust
+*** [完成] rust
+CLOSED: [2021-11-12 周五 16:17]
 
 #+begin_src emacs-lisp
-(use-package rust-mode)
-
-(use-package lsp-mode
-  :load-path "./localelpa/lsp-mode"
-  :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-         (rust-mode . lsp-deferred)
-         ;; if you want which-key integration
-         (lsp-mode . lsp-enable-which-key-integration))
-  :commands (lsp lsp-deferred)
+(use-package rust-mode
+  :hook ((rust-mode . lsp-deferred))
   :config
   ;; (require 'dap-rust)
   (require 'dap-gdb-lldb)
+  (dap-gdb-lldb-setup)
   (dap-register-debug-template "Rust::GDB Run Configuration"
                                (list :type "gdb"
                                      :request "launch"
@@ -678,8 +789,8 @@ You can use the pyvenv package to use =virtualenv= environments in Emacs.  The =
 				     :gdbpath "rust-gdb"
                                      :target nil
                                      :cwd nil)))
-
 #+end_src
+
 ** 补全 Company Mode
 
 [[http://company-mode.github.io/][Company Mode]] provides a nicer in-buffer completion interface than =completion-at-point= which is more reminiscent of what you would expect from an IDE.  We add a simple configuration to make the keybindings a little more useful (=TAB= now completes the selection and initiates completion at the current location if needed).
@@ -689,12 +800,18 @@ We also use [[https://github.com/sebastiencs/company-box][company-box]] to furth
 #+begin_src emacs-lisp :tangle yes
 
   (use-package company
-    :after lsp-mode
-    :hook (lsp-mode . company-mode)
+    ;; :after lsp-mode
+    ;; :hook (lsp-mode . company-mode)
     :bind (:map company-active-map
-           ("<tab>" . company-complete-selection))
+           ("TAB" . company-complete-selection)
+           ("<tab>" . company-complete-selection)
+           ("S-TAB" . company-complete-select-previous)
+           ("<backtab>" . company-complete-select-previous))
           (:map lsp-mode-map
            ("<tab>" . company-indent-or-complete-common))
+    :config
+    (global-company-mode 1)
+    (define-key company-mode-map [remap indent-for-tab-command] 'company-indent-for-tab-command)
     :custom
     (company-minimum-prefix-length 1)
     (company-idle-delay 0.0))
@@ -764,7 +881,7 @@ Emacs' built in commenting functionality =comment-dwim= (usually bound to =M-;=)
 ** 服务 External Services
 #+begin_src emacs-lisp
 (use-package prodigy
-  :load-path "./localelpa/prodigy"
+  ;;:load-path "./localelpa/prodigy"
   :config
         (prodigy-define-service
           :name "Information Center: El Universal"
@@ -805,7 +922,7 @@ Emacs' built in commenting functionality =comment-dwim= (usually bound to =M-;=)
 
 #+begin_src emacs-lisp
 (use-package hl-todo
-  :load-path "./localelpa/hl-todo"
+  ;;:load-path "./localelpa/hl-todo"
   :hook (prog-mode . hl-todo-mode)
   :commands hl-todo-mode
   :config
@@ -835,6 +952,16 @@ Emacs' built in commenting functionality =comment-dwim= (usually bound to =M-;=)
   :hook (prog-mode . rainbow-delimiters-mode))
 
 #+end_src
+** format 
+
+#+begin_src emacs-lisp
+(use-package format-all
+  :hook
+  (prog-mode . format-all-mode))
+#+end_src
+
+#+RESULTS:
+| format-all-mode | rainbow-delimiters-mode | hl-todo-mode |
 
 ** 代码片段 Snippets
 
