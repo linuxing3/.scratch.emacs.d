@@ -9,7 +9,8 @@
     (interactive)
     ;; NOTE: You will need to update this to a valid background path!
     (start-process-shell-command
-        "feh" nil  "feh --bg-scale /usr/share/backgrounds/matt-mcnulty-nyc-2nd-ave.jpg"))
+        "feh" nil  "feh --bg-scale /mnt/sdb6/share/images/001c9104dcc396b76c6c7857e5f8547f.jpg"))
+    ;; "/mnt/sdb6/share/images/001c9104dcc396b76c6c7857e5f8547f.jpg"
 
   (defun efs/exwm-init-hook ()
     ;; Make workspace 1 be the one where we land at startup
@@ -21,15 +22,15 @@
     ;; NOTE: The next two are disabled because we now use Polybar!
 
     ;; Show battery status in the mode line
-    ;;(display-battery-mode 1)
+    ;; (display-battery-mode 1)
 
     ;; Show the time and date in modeline
-    ;;(setq display-time-day-and-date t)
-    ;;(display-time-mode 1)
+    ;; (setq display-time-day-and-date t)
+    ;; (display-time-mode 1)
     ;; Also take a look at display-time-format and format-time-string
 
     ;; Start the Polybar panel
-    ;; (efs/start-panel)
+     (efs/start-panel)
 
     ;; Launch apps that will run in the background
     (efs/run-in-background "dunst")
