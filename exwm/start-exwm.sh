@@ -9,4 +9,4 @@
   xss-lock -- slock &
 
   # Fire it up
-  exec dbus-launch --exit-with-session emacs --with-profile scratch -mm --debug-init -l ~/.scratch.emacs.d/desktop.el
+  exec dbus-launch --exit-with-session emacs --with-profile default -mm --debug-init -l ~/.scratch.emacs.d/desktop.el

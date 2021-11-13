@@ -261,8 +261,9 @@ This configuration uses [[https://evil.readthedocs.io/en/latest/index.html][evil
     (setq evil-want-C-i-jump nil)
     :config
     (evil-mode 1)
-    (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
-    (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
+    (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state) ;; insert mode escape to normal mode
+    (define-key evil-insert-state-map (kbd "C-j") 'evil-normal-state) ;; insert mode escape to normal mode
+    (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join) ;; backward delete
 
     ;; Use visual line motions even outside of visual-line-mode buffers
     (evil-global-set-key 'motion "j" 'evil-next-visual-line)
@@ -279,146 +280,6 @@ This configuration uses [[https://evil.readthedocs.io/en/latest/index.html][evil
 #+end_src
 
 * 界面高级配置
-** Embark keybinding
-
-***  Install
-#+begin_src emacs-lisp
-(use-package marginalia
-  :ensure t
-  :config
-  (marginalia-mode))
-
-(use-package embark
-  :ensure t
-  :bind
-  (("C-." . embark-act)         ;; pick some comfortable binding
-   ("M-." . embark-dwim)        ;; good alternative: M-.
-   ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
-  :init
-  ;; Optionally replace the key help with a completing-read interface
-  (setq prefix-help-command #'embark-prefix-help-command)
-  :config
-  ;; Hide the mode line of the Embark live/completions buffers
-  (embark-define-keymap embark-file-map
-    ("d" delete-file)
-    ("r" rename-file)
-    ("c" copy-file))
-  (add-to-list 'display-buffer-alist
-               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
-                 nil
-                 (window-parameters (mode-line-format . none)))))
-
-(use-package consult)
-(use-package consult-dir)
-(use-package vertico)
-(use-package orderless)
-(use-package 0x0)
-(use-package embark-consult
-  :ensure t
-  :after (embark consult)
-  :demand t 
-  :hook
-  (embark-collect-mode . consult-preview-at-point-mode))
-
-#+end_src
-
-#+RESULTS:
-| consult-preview-at-point-mode |
-
-***  扩展Embark的功能
-
-比如我们针对Emacs 27的新标签功能，提供针对 tab的行为
-
-(1)  让Embark知道命令用于操作标签
-
-(2) 定义一个标签行为的键图并配置Embark，使得其知道所需键图
-
-然后执行 =my-select-tab-by-name= , 按下 =C-.= 触发Embark Act，就可以看到新增加的 =改名= 等命令了！
-
-#+begin_src emacs-lisp
-(use-package embark
-    :config
-    (add-to-list 'marginalia-prompt-categories '("tab by name" . tab))
-    ;; 启动命令
-    (defun my-select-tab-by-name (tab)
-        (interactive
-        (list
-            (let ((tab-list (or (mapcar #'(lambda (tab) (cdr (assq 'name tab)))
-                                        (tab-bar-tabs))
-                                (user-error "No tabs found"))))
-            (consult--read tab-list
-                            :prompt "Tabs: "
-                            :category 'tab))))
-    (tab-bar-select-tab-by-name tab))
-
-    ;; 添加标签行为
-    (embark-define-keymap embark-tab-actions
-    "Keymap for actions for tab-bar tabs (when mentioned by name)."
-    ("s" tab-bar-select-tab-by-name)
-    ("r" tab-bar-rename-tab-by-name)
-    ("k" tab-bar-close-tab-by-name))
-
-    (add-to-list 'embark-keymap-alist '(tab . embark-tab-actions))
-
-    ;; 关闭前提醒
-    (add-to-list 'embark-allow-edit-actions 'tab-bar-close-tab-by-name)
-    (defun my-confirm-close-tab-by-name (tab)
-    (interactive "sTab to close: ")
-    (when (y-or-n-p (format "Close tab '%s'? " tab))
-        (tab-bar-close-tab-by-name tab))))
-#+end_src
-
-#+RESULTS:
-: my-confirm-close-tab-by-name
-
-***  打开 =wikipedia= 链接
-
-#+begin_src emacs-lisp
-(defun my-short-wikipedia-link ()
-  "Target a link at point of the form wikipedia:Page_Name."
-  (save-excursion
-    (let* ((beg (progn (skip-chars-backward "[:alnum:]_:") (point)))
-           (end (progn (skip-chars-forward "[:alnum:]_:") (point)))
-           (str (buffer-substring-no-properties beg end)))
-      (save-match-data
-        (when (string-match "wikipedia:\\([[:alnum:]_]+\\)" str)
-          `(url 
-            (format "https://en.wikipedia.org/wiki/%s" (match-string 1 str))
-            ,beg . ,end))))))
-
-(add-to-list 'embark-target-finders 'my-short-wikipedia-link)
-#+end_src
-
-#+RESULTS:
-| embark--ivy-selected | my-short-wikipedia-link | embark-target-top-minibuffer-completion | embark-target-active-region | embark-target-collect-candidate | embark-target-completion-at-point | embark-target-bug-reference-at-point | embark-target-url-at-point | embark-target-file-at-point | embark-target-identifier-at-point | embark-target-library-file-at-point | embark-target-custom-variable-at-point | embark-target-expression-at-point | embark-target-sentence-at-point | embark-target-paragraph-at-point | embark-target-defun-at-point |
-
-Test:   [[wikipedia:Garry_Kasparov]]
-
-***  Open a file as root without losing your session
-
-Run any command that requires selecting a file. I used consult-locate to locate a root-owned file on my filesystem.
-Select one and run embark-act with a prefix argument. That is, if your binding for embark-act is C-., run C-u C-..
-Select the sudo-find-file action with S.
-
-Note: Yl need to add this action to the keymap, see below. Alternatively you can run M-x sudo-find-file or its global binding.
-
-#+begin_src emacs-lisp
-(use-package embark
-  :config
-  (defun sudo-find-file (file)
-  "Open FILE as root."
-  (interactive "FOpen file as root: ")
-  (when (file-writable-p file)
-    (user-error "File is user writeable, aborting sudo"))
-  (find-file (if (file-remote-p file)
-                 (concat "/" (file-remote-p file 'method) ":"
-                         (file-remote-p file 'user) "@" (file-remote-p file 'host)
-                         "|sudo:root@"
-                         (file-remote-p file 'host) ":" (file-remote-p file 'localname))
-               (concat "/sudo:root@localhost:" file))))
-
-  (define-key embark-file-map (kbd "S") 'sudo-find-file))
-#+end_src
 ** Command Log Mode
 
 [[https://github.com/lewang/command-log-mode][command-log-mode]] is useful for displaying a panel showing each key binding you use in a panel on the right side of the frame.  Great for live streams and screencasts!
@@ -1201,7 +1062,6 @@ For more thoughts on Eshell, check out these articles by Pierre Neidhardt:
 #+end_src
 
 * 文件管理
-
 ** Dired
 
 Dired is a built-in file manager for Emacs that does some pretty amazing things!  Here are some key bindings you should try out:
@@ -1562,13 +1422,18 @@ This snippet adds a hook to =org-mode= buffers so that =efs/org-babel-tangle-con
 #+begin_src emacs-lisp
   (require 'module-org)
 #+end_src
-** 个人键绑定 
+* 个人键绑定 
 All common binds in one file for better migration!!! Powered by =general=
 
 Instead of using =doom= macros like =map!=, which is not very convenient to migrate.
 
 #+begin_src emacs-lisp
   (require 'core-keybinds)
+#+end_src
+
+* Embark 
+#+begin_src emacs-lisp
+(require 'editor+embark)
 #+end_src
 
 * 个人信息

@@ -110,7 +110,13 @@
 
     ;; This will need to be updated to the name of a display!  You can find
     ;; the names of your displays by looking at arandr or the output of xrandr
-    (setq exwm-randr-workspace-monitor-plist '(1 "HDMI-1" 3 "HDMI-1"))
+    (setq exwm-randr-workspace-monitor-plist '(
+					       1 "HDMI-1"
+					       2 "HDMI-1"
+					       3 "HDMI-1"
+					       4 "HDMI-1"
+					       5 "HDMI-1"
+					      ))
 
     ;; NOTE: Uncomment these lines after setting up autorandr!
     ;; React to display connectivity changes, do initial display update
@@ -137,6 +143,7 @@
     (setq exwm-input-prefix-keys
       '(?\C-x
         ?\C-u
+        ?\C-M-u
         ?\C-h
         ?\M-x
         ?\M-`
