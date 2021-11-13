@@ -1,3 +1,6 @@
+  ;; (require 'exwm)
+  ;; (require 'exwm-config)
+
   (defun efs/run-in-background (command)
     (let ((command-parts (split-string command "[ ]+")))
       (apply #'call-process `(,(car command-parts) nil 0 nil ,@(cdr command-parts)))))
@@ -6,7 +9,8 @@
     (interactive)
     ;; NOTE: You will need to update this to a valid background path!
     (start-process-shell-command
-        "feh" nil  "feh --bg-scale /usr/share/backgrounds/matt-mcnulty-nyc-2nd-ave.jpg"))
+        "feh" nil  "feh --bg-scale /mnt/sdb6/share/images/001c9104dcc396b76c6c7857e5f8547f.jpg"))
+    ;; "/mnt/sdb6/share/images/001c9104dcc396b76c6c7857e5f8547f.jpg"
 
   (defun efs/exwm-init-hook ()
     ;; Make workspace 1 be the one where we land at startup
@@ -18,19 +22,19 @@
     ;; NOTE: The next two are disabled because we now use Polybar!
 
     ;; Show battery status in the mode line
-    ;;(display-battery-mode 1)
+    ;; (display-battery-mode 1)
 
     ;; Show the time and date in modeline
-    ;;(setq display-time-day-and-date t)
-    ;;(display-time-mode 1)
+    ;; (setq display-time-day-and-date t)
+    ;; (display-time-mode 1)
     ;; Also take a look at display-time-format and format-time-string
 
     ;; Start the Polybar panel
-    (efs/start-panel)
+     (efs/start-panel)
 
     ;; Launch apps that will run in the background
     (efs/run-in-background "dunst")
-    (efs/run-in-background "nm-applet")
+    ;; (efs/run-in-background "nm-applet")
     (efs/run-in-background "pasystray")
     (efs/run-in-background "blueman-applet"))
 
@@ -68,7 +72,7 @@
   (use-package exwm
     :config
     ;; Set the default number of workspaces
-    (setq exwm-workspace-number 5)
+    (setq exwm-workspace-number 10)
 
     ;; When window "class" updates, use it to set the buffer name
     (add-hook 'exwm-update-class-hook #'efs/exwm-update-class)
@@ -79,11 +83,11 @@
     ;; Configure windows as they're created
     (add-hook 'exwm-manage-finish-hook #'efs/configure-window-by-class)
 
-    ;; When EXWM starts up, do some extra confifuration
+    ;; When EXWM starts up, do some extra configuration
     (add-hook 'exwm-init-hook #'efs/exwm-init-hook)
 
     ;; Rebind CapsLock to Ctrl
-    (start-process-shell-command "xmodmap" nil "xmodmap ~/.emacs.d/exwm/Xmodmap")
+    (start-process-shell-command "xmodmap" nil "xmodmap ~/.scratch.emacs.d/exwm/Xmodmap")
 
     ;; NOTE: Uncomment the following two options if you want window buffers
     ;;       to be available on all workspaces!
@@ -101,11 +105,12 @@
     ;; Set the screen resolution (update this to be the correct resolution for your screen!)
     (require 'exwm-randr)
     (exwm-randr-enable)
-    (start-process-shell-command "xrandr" nil "xrandr --output Virtual-1 --primary --mode 2048x1152 --pos 0x0 --rotate normal")
+    ;;  (start-process-shell-command "xrandr" nil "xrandr --output Virtual-1 --primary --mode 2048x1152 --pos 0x0 --rotate normal")
+     (start-process-shell-command "xrandr" nil "xrandr --output HDMI-1 --auto")
 
     ;; This will need to be updated to the name of a display!  You can find
     ;; the names of your displays by looking at arandr or the output of xrandr
-    (setq exwm-randr-workspace-monitor-plist '(2 "Virtual-2" 3 "Virtual-2"))
+    (setq exwm-randr-workspace-monitor-plist '(1 "HDMI-1" 3 "HDMI-1"))
 
     ;; NOTE: Uncomment these lines after setting up autorandr!
     ;; React to display connectivity changes, do initial display update
