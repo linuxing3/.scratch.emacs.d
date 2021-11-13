@@ -834,3 +834,16 @@
       user-mail-address "linuxing3@qq.com")
 (setq bookmark-default-file (dropbox-path "shared/emacs-bookmarks"))
 (setq custom-theme-directory "./localelpa/themes/")
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(wgrep ivy-hydra typescript-mode embark-consult 0x0 orderless vertico consult-dir consult embark marginalia which-key vterm visual-fill-column use-package simple-httpd rust-mode rainbow-delimiters pyim prodigy ox-reveal ox-hugo org-superstar org-super-agenda org-pomodoro org-journal org-fancy-priorities org-download org-bullets org-brain ob-rust ob-go ob-deno no-littering lsp-ui ivy-rich ivy-prescient htmlize hl-todo helpful go-eldoc general format-all forge flycheck-plantuml exwm-x evil-nerd-commenter evil-collection eterm-256color eshell-git-prompt emacsql-sqlite3 elfeed-org doom-themes doom-modeline dired-single dired-open dired-hide-dotfiles desktop-environment dap-mode counsel-projectile command-log-mode auto-yasnippet auto-package-update all-the-icons-dired)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
