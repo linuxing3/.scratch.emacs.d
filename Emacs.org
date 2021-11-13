@@ -236,7 +236,7 @@ This configuration uses [[https://evil.readthedocs.io/en/latest/index.html][evil
     (efs/leader-keys
       "t"  '(:ignore t :which-key "toggles")
       "tt" '(counsel-load-theme :which-key "choose theme")
-      "fde" '(lambda () (interactive) (find-file (expand-file-name "~/emacs-repos/emacs-from-scratch/Emacs.org")))))
+      "fs" '(lambda () (interactive) (find-file (expand-file-name "~/.scratch.emacs.d/Emacs.org")))))
 
   (use-package evil
     :init
@@ -262,6 +262,9 @@ This configuration uses [[https://evil.readthedocs.io/en/latest/index.html][evil
     (evil-collection-init))
 
 #+end_src
+
+#+RESULTS:
+: t
 
 * 界面高级配置
 
@@ -438,7 +441,7 @@ The =which-key= integration adds helpful descriptions of the various keys so you
     (lsp-headerline-breadcrumb-mode))
 
   (use-package lsp-mode
-    :load-path "./localelpa/lsp-mode"
+    ;;:load-path "./localelpa/lsp-mode"
     :commands (lsp lsp-deferred)
     :hook (lsp-mode . efs/lsp-mode-setup)
     :init
@@ -458,7 +461,7 @@ The =which-key= integration adds helpful descriptions of the various keys so you
 #+begin_src emacs-lisp
  
   (use-package lsp-ui
-    :load-path "./localelpa/lsp-ui"
+    ;;:load-path "./localelpa/lsp-ui"
     :hook (lsp-mode . lsp-ui-mode)
     :custom
     (lsp-ui-doc-position 'bottom))
@@ -483,7 +486,7 @@ This package is built on the [[https://github.com/Alexander-Miller/treemacs][tre
 #+begin_src emacs-lisp
 
   (use-package lsp-treemacs
-    :load-path "./localelpa/lsp-treemacs"
+    ;;:load-path "./localelpa/lsp-treemacs"
     :after lsp)
 
 #+end_src
@@ -502,7 +505,7 @@ Try these commands with =M-x=:
 #+begin_src emacs-lisp :tangle yes
 
   (use-package lsp-ivy
-    :load-path "./localelpa/lsp-ivy"
+    ;; :load-path "./localelpa/lsp-ivy"
     :after lsp)
 
 #+end_src
@@ -516,7 +519,7 @@ Try these commands with =M-x=:
 #+begin_src emacs-lisp :tangle yes
 
   (use-package dap-mode
-    :load-path "./localelpa/dap-mode"
+    ;; :load-path "./localelpa/dap-mode"
     ;; Uncomment the config below if you want all UI panes to be hidden by default!
     ;; :custom
     ;; (lsp-enable-dap-auto-configure nil)
@@ -537,6 +540,7 @@ Try these commands with =M-x=:
 #+end_src
 
 #+RESULTS:
+: t
 
 *** TypeScript
 
@@ -621,7 +625,7 @@ You can use the pyvenv package to use =virtualenv= environments in Emacs.  The =
   go-mode 'go-eldoc-setup)
 
 (use-package lsp-mode
-  :load-path "./localelpa/lsp-mode"
+  ;;:load-path "./localelpa/lsp-mode"
   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
          (go-mode . lsp-deferred)
          ;; if you want which-key integration
@@ -652,7 +656,7 @@ You can use the pyvenv package to use =virtualenv= environments in Emacs.  The =
 (use-package rust-mode)
 
 (use-package lsp-mode
-  :load-path "./localelpa/lsp-mode"
+  ;;:load-path "./localelpa/lsp-mode"
   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
          (rust-mode . lsp-deferred)
          ;; if you want which-key integration
@@ -670,6 +674,10 @@ You can use the pyvenv package to use =virtualenv= environments in Emacs.  The =
                                      :cwd nil)))
 
 #+end_src
+
+#+RESULTS:
+| lsp-enable-which-key-integration | lsp-ui-mode | efs/lsp-mode-setup |
+
 ** 补全 Company Mode
 
 [[http://company-mode.github.io/][Company Mode]] provides a nicer in-buffer completion interface than =completion-at-point= which is more reminiscent of what you would expect from an IDE.  We add a simple configuration to make the keybindings a little more useful (=TAB= now completes the selection and initiates completion at the current location if needed).
@@ -756,7 +764,7 @@ Emacs' built in commenting functionality =comment-dwim= (usually bound to =M-;=)
 ** 服务 External Services
 #+begin_src emacs-lisp
 (use-package prodigy
-  :load-path "./localelpa/prodigy"
+  ;;:load-path "./localelpa/prodigy"
   :config
         (prodigy-define-service
           :name "Information Center: El Universal"
@@ -797,7 +805,7 @@ Emacs' built in commenting functionality =comment-dwim= (usually bound to =M-;=)
 
 #+begin_src emacs-lisp
 (use-package hl-todo
-  :load-path "./localelpa/hl-todo"
+  ;;:load-path "./localelpa/hl-todo"
   :hook (prog-mode . hl-todo-mode)
   :commands hl-todo-mode
   :config
@@ -900,6 +908,17 @@ Emacs' built in commenting functionality =comment-dwim= (usually bound to =M-;=)
 
 #+RESULTS:
 : t
+
+** Format
+#+begin_src emacs-lisp
+(use-package format-all
+  :ensure t
+  :hook
+  (prog-mode . format-all-mode))
+#+end_src
+
+#+RESULTS:
+| format-all-mode | rainbow-delimiters-mode | hl-todo-mode |
 
 * 终端设置
 ** term-mode
@@ -1252,7 +1271,7 @@ The =efs/org-font-setup= function configures various text faces to tweak the siz
                     (org-level-6 . 1.1)
                     (org-level-7 . 1.1)
                     (org-level-8 . 1.1)))
-      (set-face-attribute (car face) nil :font "Microsoft Yahei UI" :weight 'regular :height (cdr face)))
+      (set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face)))
 
     ;; Ensure that anything that should be fixed-pitch in Org files appears that way
     (set-face-attribute 'org-block nil    :foreground nil :inherit 'fixed-pitch)

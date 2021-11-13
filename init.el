@@ -141,7 +141,7 @@
     (efs/leader-keys
       "t"  '(:ignore t :which-key "toggles")
       "tt" '(counsel-load-theme :which-key "choose theme")
-      "fde" '(lambda () (interactive) (find-file (expand-file-name "~/emacs-repos/emacs-from-scratch/Emacs.org")))))
+      "fs" '(lambda () (interactive) (find-file (expand-file-name "~/.scratch.emacs.d/Emacs.org")))))
 
   (use-package evil
     :init
@@ -254,7 +254,7 @@
     (lsp-headerline-breadcrumb-mode))
 
   (use-package lsp-mode
-    :load-path "./localelpa/lsp-mode"
+    ;;:load-path "./localelpa/lsp-mode"
     :commands (lsp lsp-deferred)
     :hook (lsp-mode . efs/lsp-mode-setup)
     :init
@@ -263,13 +263,13 @@
     (lsp-enable-which-key-integration t))
 
   (use-package lsp-ui
-    :load-path "./localelpa/lsp-ui"
+    ;;:load-path "./localelpa/lsp-ui"
     :hook (lsp-mode . lsp-ui-mode)
     :custom
     (lsp-ui-doc-position 'bottom))
 
   (use-package lsp-treemacs
-    :load-path "./localelpa/lsp-treemacs"
+    ;;:load-path "./localelpa/lsp-treemacs"
     :after lsp)
 
 (use-package go-mode
@@ -285,7 +285,7 @@
   go-mode 'go-eldoc-setup)
 
 (use-package lsp-mode
-  :load-path "./localelpa/lsp-mode"
+  ;;:load-path "./localelpa/lsp-mode"
   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
          (go-mode . lsp-deferred)
          ;; if you want which-key integration
@@ -308,7 +308,7 @@
 (use-package rust-mode)
 
 (use-package lsp-mode
-  :load-path "./localelpa/lsp-mode"
+  ;;:load-path "./localelpa/lsp-mode"
   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
          (rust-mode . lsp-deferred)
          ;; if you want which-key integration
@@ -345,7 +345,7 @@
     :bind ("C-/" . evilnc-comment-or-uncomment-lines))
 
 (use-package prodigy
-  :load-path "./localelpa/prodigy"
+  ;;:load-path "./localelpa/prodigy"
   :config
         (prodigy-define-service
           :name "Information Center: El Universal"
@@ -378,7 +378,7 @@
           :kill-process-buffer-on-stop t))
 
 (use-package hl-todo
-  :load-path "./localelpa/hl-todo"
+  ;;:load-path "./localelpa/hl-todo"
   :hook (prog-mode . hl-todo-mode)
   :commands hl-todo-mode
   :config
@@ -461,6 +461,11 @@
   :after yasnippet
   :config
   (add-to-list 'yas-snippet-dirs 'doom-snippets-dir))
+
+(use-package format-all
+  :ensure t
+  :hook
+  (prog-mode . format-all-mode))
 
   (use-package term
     :commands term
@@ -615,7 +620,7 @@
                     (org-level-6 . 1.1)
                     (org-level-7 . 1.1)
                     (org-level-8 . 1.1)))
-      (set-face-attribute (car face) nil :font "Microsoft Yahei UI" :weight 'regular :height (cdr face)))
+      (set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face)))
 
     ;; Ensure that anything that should be fixed-pitch in Org files appears that way
     (set-face-attribute 'org-block nil    :foreground nil :inherit 'fixed-pitch)
@@ -709,3 +714,20 @@
       user-mail-address "linuxing3@qq.com")
 (setq bookmark-default-file (dropbox-path "shared/emacs-bookmarks"))
 (setq custom-theme-directory "./localelpa/themes/")
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-agenda-files
+   (quote
+    ("~/org/phone.org" "/home/vagrant/OneDrive/works.agenda.org" "/home/vagrant/org/xingwenju.agenda.org" "/home/vagrant/org/notes.agenda.org" "/home/vagrant/org/projects.agenda.org" "/home/vagrant/org/lulu.agenda.org" "/home/vagrant/org/habit.agenda.org" "/home/vagrant/org/daniel.agenda.org" "/home/vagrant/org/inbox.agenda.org")))
+ '(package-selected-packages
+   (quote
+    (pyim which-key vterm visual-fill-column use-package simple-httpd rust-mode rainbow-delimiters prodigy ox-reveal ox-hugo org-superstar org-super-agenda org-pomodoro org-journal org-fancy-priorities org-download org-bullets org-brain ob-rust ob-go ob-deno no-littering lsp-ui ivy-rich ivy-prescient htmlize hl-todo helpful go-eldoc general format-all forge flycheck-plantuml exwm-x evil-nerd-commenter evil-collection eterm-256color eshell-git-prompt emacsql-sqlite3 elfeed-org doom-themes doom-modeline dired-single dired-open dired-hide-dotfiles desktop-environment dap-mode counsel-projectile command-log-mode auto-yasnippet auto-package-update all-the-icons-dired))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

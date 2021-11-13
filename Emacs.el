@@ -1,9 +1,9 @@
   (use-package lsp-ivy
-    :load-path "./localelpa/lsp-ivy"
+    ;; :load-path "./localelpa/lsp-ivy"
     :after lsp)
 
   (use-package dap-mode
-    :load-path "./localelpa/dap-mode"
+    ;; :load-path "./localelpa/dap-mode"
     ;; Uncomment the config below if you want all UI panes to be hidden by default!
     ;; :custom
     ;; (lsp-enable-dap-auto-configure nil)

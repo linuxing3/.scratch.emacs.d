@@ -1,5 +1,5 @@
-  (require 'exwm)
-  (require 'exwm-config)
+  ;; (require 'exwm)
+  ;; (require 'exwm-config)
 
   (defun efs/run-in-background (command)
     (let ((command-parts (split-string command "[ ]+")))
@@ -72,7 +72,7 @@
   (use-package exwm
     :config
     ;; Set the default number of workspaces
-    (setq exwm-workspace-number 5)
+    (setq exwm-workspace-number 10)
 
     ;; When window "class" updates, use it to set the buffer name
     (add-hook 'exwm-update-class-hook #'efs/exwm-update-class)
@@ -83,11 +83,11 @@
     ;; Configure windows as they're created
     (add-hook 'exwm-manage-finish-hook #'efs/configure-window-by-class)
 
-    ;; When EXWM starts up, do some extra confifuration
+    ;; When EXWM starts up, do some extra configuration
     (add-hook 'exwm-init-hook #'efs/exwm-init-hook)
 
     ;; Rebind CapsLock to Ctrl
-    (start-process-shell-command "xmodmap" nil "xmodmap ~/.emacs.d/exwm/Xmodmap")
+    (start-process-shell-command "xmodmap" nil "xmodmap ~/.scratch.emacs.d/exwm/Xmodmap")
 
     ;; NOTE: Uncomment the following two options if you want window buffers
     ;;       to be available on all workspaces!
