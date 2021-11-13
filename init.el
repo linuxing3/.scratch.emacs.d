@@ -2,8 +2,8 @@
   ;;       in Emacs and init.el will be generated automatically!
 
   ;; You will most likely need to adjust this font size for your system!
-  (defvar efs/default-font-size 140)
-  (defvar efs/default-variable-font-size 140)
+  (defvar efs/default-font-size 160)
+  (defvar efs/default-variable-font-size 160)
 
   ;; Make frame transparency overridable
   (defvar efs/frame-transparency '(90 . 90))
@@ -14,11 +14,11 @@
     (prefer-coding-system 'utf-8)
     (set-language-environment 'utf-8)
     (set-buffer-file-coding-system 'utf-8)
-    (set-clipboard-coding-system 'utf-8)
-    (set-file-name-coding-system 'utf-8)
-    (set-keyboard-coding-system 'utf-8)
-    (set-terminal-coding-system 'utf-8)
-    (set-selection-coding-system 'utf-8)
+    ;; (set-clipboard-coding-system 'utf-8)
+    ;; (set-file-name-coding-system 'utf-8)
+    ;; (set-keyboard-coding-system 'utf-8)
+    ;; (set-terminal-coding-system 'utf-8)
+    ;; (set-selection-coding-system 'utf-8)
     (setq org-export-coding-system 'utf-8)
 
   ;; The default is 800 kilobytes.  Measured in bytes.
@@ -165,7 +165,6 @@
     :config
     (evil-mode 1)
     (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state) ;; insert mode escape to normal mode
-    (define-key evil-insert-state-map (kbd "C-j") 'evil-normal-state) ;; insert mode escape to normal mode
     (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join) ;; backward delete
 
     ;; Use visual line motions even outside of visual-line-mode buffers

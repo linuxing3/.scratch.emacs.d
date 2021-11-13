@@ -1,6 +1,6 @@
 #!/bin/sh
   # Set the screen DPI (uncomment this if needed!)
-  # xrdb ~/.emacs.d/exwm/Xresources
+  xrdb ~/.emacs.d/exwm/Xresources
 
   # Run the screen compositor
   compton &
@@ -9,4 +9,4 @@
   xss-lock -- slock &
 
   # Fire it up
-  exec dbus-launch --exit-with-session emacs --with-profile default -mm --debug-init -l ~/.scratch.emacs.d/desktop.el
+  exec dbus-launch --exit-with-session emacs -mm --debug-init -l ~/.scratch.emacs.d/desktop.el
