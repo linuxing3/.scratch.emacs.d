@@ -797,7 +797,7 @@ Emacs' built in commenting functionality =comment-dwim= (usually bound to =M-;=)
         (prodigy-define-service
           :name "Run Hugo Site Server"
           :command "hugo"
-          :args '("server" "--buildDrafts")
+          :args '("server")
           :cwd "~/workspace/awesome-hugo-blog"
           :tags '(work)
           :stop-signal 'sigkill

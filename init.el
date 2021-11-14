@@ -398,7 +398,7 @@
         (prodigy-define-service
           :name "Run Hugo Site Server"
           :command "hugo"
-          :args '("server" "--buildDrafts")
+          :args '("server")
           :cwd "~/workspace/awesome-hugo-blog"
           :tags '(work)
           :stop-signal 'sigkill
@@ -738,3 +738,16 @@
       user-mail-address "linuxing3@qq.com")
 (setq bookmark-default-file (dropbox-path "shared/emacs-bookmarks"))
 (setq custom-theme-directory "./localelpa/themes/")
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(mu4e simple-httpd ox-hugo org-journal org-pomodoro elfeed-org ox-reveal org-brain org-download htmlize)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
