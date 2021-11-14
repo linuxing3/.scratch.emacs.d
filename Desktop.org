@@ -7,6 +7,8 @@
 
 We use the excellent [[https://github.com/ch11ng/exwm][EXWM]] module as the basis for our Emacs Desktop Environment.  The [[https://github.com/ch11ng/exwm/wiki][EXWM Wiki]] is a great place to find tips about how to configure everything!
 
+*NOTE:* Curiously, it does not work if I change to =develop= branch, something wrong with the =xrandr= settings
+
 *NOTE:* Make sure you've installed =nm-applet=, =pasystray= and =blueman= for the system tray apps to work!
 
 #+begin_src emacs-lisp
@@ -264,7 +266,7 @@ This launcher script is invoked by =EXWM.desktop= to start Emacs and load our de
 
 ** Keyboard Configuration
 
-The =Xmodmap= file will be used with the =xmodmap= program to remap CapsLock to Ctrl inside of our desktop environment:
+Since people rarely use the =Right Ctrl= key and =CapsLock= key is big and neare,  the =Xmodmap= file will be used with the =xmodmap= program to remap =CapsLock= to =Right Ctrl= , and =Right Ctrl= to =CapsLock= inside of our desktop environment:
 
 #+begin_src sh :tangle ./exwm/Xmodmap
 
