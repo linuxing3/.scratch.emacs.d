@@ -1,5 +1,5 @@
-  (require 'exwm)
-  (require 'exwm-config)
+  ;; (require 'exwm)
+  ;; (require 'exwm-config)
 
   (defun efs/run-in-background (command)
     (let ((command-parts (split-string command "[ ]+")))
@@ -106,31 +106,25 @@
     (require 'exwm-randr)
     (exwm-randr-enable)
     ;;  (start-process-shell-command "xrandr" nil "xrandr --output Virtual-1 --primary --mode 2048x1152 --pos 0x0 --rotate normal")
-     (start-process-shell-command "xrandr" nil "xrandr --output HDMI-1 --primary --auto")
+     (start-process-shell-command "xrandr" nil "xrandr --output HDMI-1 --auto")
 
     ;; This will need to be updated to the name of a display!  You can find
     ;; the names of your displays by looking at arandr or the output of xrandr
-    (setq exwm-randr-workspace-monitor-plist '(
-					       1 "HDMI-1"
-					       2 "HDMI-1"
-					       3 "HDMI-1"
-					       4 "eDP-1"
-					       5 "eDP-1"
-					      ))
+    (setq exwm-randr-workspace-monitor-plist '(1 "HDMI-1" 3 "HDMI-1"))
 
     ;; NOTE: Uncomment these lines after setting up autorandr!
     ;; React to display connectivity changes, do initial display update
-    (add-hook 'exwm-randr-screen-change-hook #'efs/update-displays)
-    (efs/update-displays)
+    ;; (add-hook 'exwm-randr-screen-change-hook #'efs/update-displays)
+    ;; (efs/update-displays)
 
     ;; Set the wallpaper after changing the resolution
     (efs/set-wallpaper)
 
     ;; NOTE: This is disabled because we now use Polybar!
     ;; Load the system tray before exwm-init
-    (require 'exwm-systemtray)
-    (setq exwm-systemtray-height 32)
-    (exwm-systemtray-enable)
+    ;; (require 'exwm-systemtray)
+    ;; (setq exwm-systemtray-height 32)
+    ;; (exwm-systemtray-enable)
 
     ;; Automatically send the mouse cursor to the selected workspace's display
     (setq exwm-workspace-warp-cursor t)
@@ -143,7 +137,6 @@
     (setq exwm-input-prefix-keys
       '(?\C-x
         ?\C-u
-        ?\C-M-u
         ?\C-h
         ?\M-x
         ?\M-`
