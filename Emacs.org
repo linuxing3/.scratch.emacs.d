@@ -280,7 +280,6 @@ This configuration uses [[https://evil.readthedocs.io/en/latest/index.html][evil
 
 * 界面高级配置
 ** Embark keybinding
-
 ***  Install
 #+begin_src emacs-lisp
 (use-package marginalia
