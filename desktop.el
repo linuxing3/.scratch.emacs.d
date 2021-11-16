@@ -9,7 +9,7 @@
     (interactive)
     ;; NOTE: You will need to update this to a valid background path!
     (start-process-shell-command
-        "feh" nil  "feh --bg-scale /mnt/sdb6/share/images/001c9104dcc396b76c6c7857e5f8547f.jpg"))
+        "feh" nil  "feh --bg-scale /mnt/sdb8/home/vagrant/Pictures/macos-catalina-1920x1080-night-mountains-wwdc-2019-5k-21589.jpg"))
     ;; "/mnt/sdb6/share/images/001c9104dcc396b76c6c7857e5f8547f.jpg"
 
   (defun efs/exwm-init-hook ()
