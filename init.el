@@ -747,3 +747,4 @@
 (setq custom-theme-directory "./localelpa/themes/")
 (setq user-full-name "Xing Wenju"
       user-mail-address "linuxing3@qq.com")
+(setq browse-url-browser-function 'browse-url-chromium)
