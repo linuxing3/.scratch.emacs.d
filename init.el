@@ -621,6 +621,7 @@
     :after projectile
     :config (counsel-projectile-mode))
 
+  (require 'project)
   (use-package project-x
     :after project
     :load-path "~/.evil.emacs.d/modules/project-x.el"
