@@ -1,5 +1,47 @@
 ;;; -*- lisp-data -*-
-(("~/.dotfiles/"
+(("~/emacs-repos/emacs-from-scratch/"
+  (files "c:/Users/wjb/emacs-repos/emacs-from-scratch/Emacs.org" "c:/Users/wjb/emacs-repos/emacs-from-scratch/slim.org")
+  (windows
+   ((min-height . 4)
+    (min-width . 10)
+    (min-height-ignore . 3)
+    (min-width-ignore . 4)
+    (min-height-safe . 1)
+    (min-width-safe . 2)
+    (min-pixel-height . 104)
+    (min-pixel-width . 130)
+    (min-pixel-height-ignore . 78)
+    (min-pixel-width-ignore . 52)
+    (min-pixel-height-safe . 26)
+    (min-pixel-width-safe . 26))
+   leaf
+   (pixel-width . 1920)
+   (pixel-height . 992)
+   (total-width . 147)
+   (total-height . 38)
+   (normal-height . 1.0)
+   (normal-width . 1.0)
+   (buffer "slim.org"
+	   (selected . t)
+	   (hscroll . 0)
+	   (fringes 10 10 t nil)
+	   (margins 23 . 23)
+	   (scroll-bars nil 0 t nil 0 t nil)
+	   (vscroll . 0)
+	   (dedicated)
+	   (point . 1232)
+	   (start . 43))
+   (next-buffers "Emacs.org" "xingwenju.agenda.org")
+   (prev-buffers
+    ("Emacs.org" 36262 36734)
+    ("xingwenju.agenda.org" 1 903)
+    ("slim.org" 1 1232)
+    ("*Disabled Command*" 1 1)
+    ("*elfeed-log*" 1 83)
+    ("works.agenda.org" 1 93)
+    ("*Messages*" 9799 10347)
+    ("*Org Agenda*" 1 473))))
+ ("~/.dotfiles/"
   (files "/home/vagrant/.dotfiles/.config/i3/config" "/home/vagrant/.dotfiles/.config/i3status-rust/config.toml" "~/.dotfiles/.config/i3status-rust/themes/" "~/.dotfiles/.config/i3status-rust/" "~/.dotfiles/.config/i3blocks/" "~/.dotfiles/custom/" "~/.dotfiles/.config/dunst/" "~/.dotfiles/.config/micro/" "~/.dotfiles/.config/nvim/" "~/.dotfiles/.config/" "~/.dotfiles/" "~/.dotfiles/.space-vim/" "/home/vagrant/.dotfiles/.space-vim/README.md")
   (windows
    ((min-height . 4)
