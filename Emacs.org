@@ -1,5 +1,6 @@
-#+title: Emacs From Scratch Configuration
+#+TITLE: Emacs From Scratch Configuration
 #+PROPERTY: header-args:emacs-lisp :tangle ./init.el :mkdirp yes
+#+STARTUP: overview
 
 * 欢迎!
 
@@ -754,6 +755,20 @@ This is an example of configuring another non-Emacs application using org-mode. 
   :config (flycheck-plantuml-setup))
 
 #+end_src
+*** MPV Player
+
+#+begin_src emacs-lisp
+(use-package mpv)
+#+end_src
+*** Ivy-youtube
+#+begin_src emacs-lisp :tangle no
+(use-package ivy-youtube
+  :config
+  (setq ivy-youtube-key ""))
+#+end_src
+
+#+RESULTS:
+: t
 
 * Embark 
 #+begin_src emacs-lisp
