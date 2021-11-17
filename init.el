@@ -96,10 +96,12 @@
   (tooltip-mode -1)           ; Disable tooltips
   (menu-bar-mode -1)            ; Disable the menu bar
 
- (when (display-graph-p) (progn
-   (scroll-bar-mode -1)        ; Disable visible scrollbar
-   (set-fringe-mode 10)        ; Give some breathing room
-                          ))
+  (when (display-graphic-p)
+    (progn
+        (scroll-bar-mode -1)        ; Disable visible scrollbar
+        (set-fringe-mode 10)        ; Give some breathing room
+      ))
+
   ;; Set up the visible bell
   (setq visible-bell t)
 
@@ -149,7 +151,7 @@
      (cond
       ((member "WenQuanYi Micro Hei" (font-family-list)) "WenQuanYi Micro Hei"))))))
 
-(when (display-graph-p) (+modern-ui-chinese-h))
+(when (display-graphic-p) (+modern-ui-chinese-h))
 
   ;; Make ESC quit prompts
   (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
