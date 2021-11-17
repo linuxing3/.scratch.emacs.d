@@ -168,11 +168,14 @@ This section configures basic UI settings that remove unneeded elements to make 
 
   ;; Make modern look
   (show-paren-mode  1)
-  (scroll-bar-mode -1)        ; Disable visible scrollbar
   (tool-bar-mode -1)          ; Disable the toolbar
   (tooltip-mode -1)           ; Disable tooltips
-  (set-fringe-mode 10)        ; Give some breathing room
   (menu-bar-mode -1)            ; Disable the menu bar
+
+  (when (display-graph-p) 
+      (progn
+       (scroll-bar-mode -1)        ; Disable visible scrollbar
+       (set-fringe-mode 10)))      ; Give some breathing room
 
   ;; Set up the visible bell
   (setq visible-bell t)
@@ -236,7 +239,7 @@ I am using the [[https://github.com/tonsky/FiraCode][Fira Code]] and [[https://f
      (cond
       ((member "WenQuanYi Micro Hei" (font-family-list)) "WenQuanYi Micro Hei"))))))
 
-(+modern-ui-chinese-h)
+(when (display-graph-p) (+modern-ui-chinese-h))
 #+end_src
 
 #+RESULTS:
