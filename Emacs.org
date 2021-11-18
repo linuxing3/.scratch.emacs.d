@@ -120,7 +120,7 @@ You can also use =M-x auto-package-update-now= to update right now!
 
 ** Load my private modules helpers.
 
-Here we just add some helper functions like =dropbox-path= and =workspace-path= 
+Here we just add some helper functions 
 
 #+begin_src emacs-lisp
   (add-to-list 'load-path "~/.evil.emacs.d/core")
@@ -748,10 +748,10 @@ This is an example of configuring another non-Emacs application using org-mode. 
                              file file))
       (reload-image-at-point)))
   :init
-  (setq org-ditaa-jar-path (dropbox-path "bin/ditaa.jar"))
+  (setq org-ditaa-jar-path "~/.dotfiles/tools/ditaa.jar")
   (setq plantuml-default-exec-mode 'jar) ;; jar使用本地jar包生成图片
-  (setq plantuml-jar-path (dropbox-path "bin/plantuml.jar")
-        org-plantuml-jar-path plantuml-jar-path))
+  (setq plantuml-jar-path "~/.dotfiles/tools/plantuml.jar")
+  (setq org-plantuml-jar-path plantuml-jar-path)
 
 (use-package flycheck-plantuml
   :ensure t
@@ -951,8 +951,8 @@ This snippet adds a hook to =org-mode= buffers so that =efs/org-babel-tangle-con
 #+end_src
 * 个人信息
 #+begin_src emacs-lisp
-(setq bookmark-default-file (dropbox-path "shared/emacs-bookmarks"))
-(setq custom-theme-directory "./localelpa/themes/")
+(setq bookmark-default-file "~/.dotfiles/custom/emacs/emacs-bookmarks")
+(setq custom-theme-directory "~/.dotfiles/custom/emacs/themes/")
 (setq user-full-name "Xing Wenju"
       user-mail-address "linuxing3@qq.com")
 (setq browse-url-browser-function 'browse-url-chromium)
@@ -1391,7 +1391,7 @@ Emacs' built in commenting functionality =comment-dwim= (usually bound to =M-;=)
           :name "Information Center: El Universal"
           :command "scrapy"
           :args '("crawl" "eluniversal")
-          :cwd "~/Dropbox/shared/InformationCenter"
+          :cwd "~/OneDrive/shared/InformationCenter"
           :tags '(work)
           :stop-signal 'sigkill
           :kill-process-buffer-on-stop t)
@@ -1471,7 +1471,7 @@ Emacs' built in commenting functionality =comment-dwim= (usually bound to =M-;=)
 
 #+begin_src emacs-lisp
 ;; yasnippet mode
-(defvar +snippets-dir (dropbox-path "config/emacs/snippets")
+(defvar +snippets-dir "~/.dotfiles/custom/emacs/snippets"
   "Directory where `yasnippet' will search for your private snippets.")
 
 (defun +snippet--ensure-dir (dir)

@@ -400,10 +400,10 @@
                              file file))
       (reload-image-at-point)))
   :init
-  (setq org-ditaa-jar-path (dropbox-path "bin/ditaa.jar"))
+  (setq org-ditaa-jar-path "~/.dotfiles/tools/ditaa.jar")
   (setq plantuml-default-exec-mode 'jar) ;; jar使用本地jar包生成图片
-  (setq plantuml-jar-path (dropbox-path "bin/plantuml.jar")
-        org-plantuml-jar-path plantuml-jar-path))
+  (setq plantuml-jar-path "~/.dotfiles/tools/plantuml.jar")
+  (setq org-plantuml-jar-path plantuml-jar-path)
 
 (use-package flycheck-plantuml
   :ensure t
@@ -513,8 +513,8 @@
 
   (require 'module-org)
 
-(setq bookmark-default-file (dropbox-path "shared/emacs-bookmarks"))
-(setq custom-theme-directory "./localelpa/themes/")
+(setq bookmark-default-file "~/.dotfiles/custom/emacs/emacs-bookmarks")
+(setq custom-theme-directory "~/.dotfiles/custom/emacs/themes/")
 (setq user-full-name "Xing Wenju"
       user-mail-address "linuxing3@qq.com")
 (setq browse-url-browser-function 'browse-url-chromium)
@@ -645,7 +645,7 @@
           :name "Information Center: El Universal"
           :command "scrapy"
           :args '("crawl" "eluniversal")
-          :cwd "~/Dropbox/shared/InformationCenter"
+          :cwd "~/OneDrive/shared/InformationCenter"
           :tags '(work)
           :stop-signal 'sigkill
           :kill-process-buffer-on-stop t)
@@ -696,7 +696,7 @@
   (prog-mode . format-all-mode))
 
 ;; yasnippet mode
-(defvar +snippets-dir (dropbox-path "config/emacs/snippets")
+(defvar +snippets-dir "~/.dotfiles/custom/emacs/snippets"
   "Directory where `yasnippet' will search for your private snippets.")
 
 (defun +snippet--ensure-dir (dir)
@@ -762,16 +762,3 @@
 
   ;; Make gc pauses faster by decreasing the threshold.
   (setq gc-cons-threshold (* 2 1000 1000))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(org-agenda-files
-   '("c:/Users/wjb/org/xingwenju.agenda.org" "c:/Users/wjb/org/works.agenda.org" "c:/Users/wjb/org/projects.agenda.org" "c:/Users/wjb/org/notes.agenda.org" "c:/Users/wjb/org/lulu.agenda.org" "c:/Users/wjb/org/inbox.agenda.org" "c:/Users/wjb/org/habit.agenda.org" "c:/Users/wjb/org/daniel.agenda.org")))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
