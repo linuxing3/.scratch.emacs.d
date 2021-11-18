@@ -1,6 +1,47 @@
 ;;; -*- lisp-data -*-
-(("~/emacs-repos/emacs-from-scratch/"
-  (files "c:/Users/wjb/emacs-repos/emacs-from-scratch/Emacs.org" "c:/Users/wjb/emacs-repos/emacs-from-scratch/slim.org")
+(("~/org/"
+  (files "c:/Users/wjb/org/roam/daily/2021-11-17.org" "c:/Users/wjb/org/")
+  (windows
+   ((min-height . 4)
+    (min-width . 10)
+    (min-height-ignore . 3)
+    (min-width-ignore . 4)
+    (min-height-safe . 1)
+    (min-width-safe . 2)
+    (min-pixel-height . 104)
+    (min-pixel-width . 130)
+    (min-pixel-height-ignore . 78)
+    (min-pixel-width-ignore . 52)
+    (min-pixel-height-safe . 26)
+    (min-pixel-width-safe . 26))
+   leaf
+   (pixel-width . 1920)
+   (pixel-height . 992)
+   (total-width . 148)
+   (total-height . 38)
+   (normal-height . 1.0)
+   (normal-width . 1.0)
+   (buffer "org"
+	   (selected . t)
+	   (hscroll . 0)
+	   (fringes 10 10 nil nil)
+	   (margins nil)
+	   (scroll-bars nil 0 t nil 0 t nil)
+	   (vscroll . 0)
+	   (dedicated)
+	   (point . 2168)
+	   (start . 1))
+   (prev-buffers
+    ("org" 1525 2848)
+    ("shared" 1 323)
+    ("ebooks" 1 328)
+    ("scrapy-project" 1 337)
+    ("ppt" 1 328)
+    ("wx-robot" 1 331)
+    ("statistic-notebook" 1 343)
+    ("2021-11-17.org" 356 419))))
+ ("~/emacs-repos/emacs-from-scratch/"
+  (files "c:/Users/wjb/emacs-repos/emacs-from-scratch/Emacs.org")
   (windows
    ((min-height . 4)
     (min-width . 10)
@@ -21,7 +62,7 @@
    (total-height . 38)
    (normal-height . 1.0)
    (normal-width . 1.0)
-   (buffer "slim.org"
+   (buffer "Emacs.org"
 	   (selected . t)
 	   (hscroll . 0)
 	   (fringes 10 10 t nil)
@@ -29,18 +70,11 @@
 	   (scroll-bars nil 0 t nil 0 t nil)
 	   (vscroll . 0)
 	   (dedicated)
-	   (point . 1232)
-	   (start . 43))
-   (next-buffers "Emacs.org" "xingwenju.agenda.org")
+	   (point . 6563)
+	   (start . 6563))
    (prev-buffers
-    ("Emacs.org" 36262 36734)
-    ("xingwenju.agenda.org" 1 903)
-    ("slim.org" 1 1232)
-    ("*Disabled Command*" 1 1)
-    ("*elfeed-log*" 1 83)
-    ("works.agenda.org" 1 93)
-    ("*Messages*" 9799 10347)
-    ("*Org Agenda*" 1 473))))
+    ("Emacs.org" 5504 5834)
+    ("*scratch*" 1 41))))
  ("~/.dotfiles/"
   (files "/home/vagrant/.dotfiles/tools/install-emacs.sh" "/home/vagrant/.dotfiles/tools/install-gitserver.sh" "/home/vagrant/.dotfiles/tools/install-rethinkdb.sh" "/home/vagrant/.dotfiles/tools/install-xray-trojan-nginx.sh")
   (windows

@@ -762,3 +762,16 @@
 
   ;; Make gc pauses faster by decreasing the threshold.
   (setq gc-cons-threshold (* 2 1000 1000))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-agenda-files
+   '("c:/Users/wjb/org/xingwenju.agenda.org" "c:/Users/wjb/org/works.agenda.org" "c:/Users/wjb/org/projects.agenda.org" "c:/Users/wjb/org/notes.agenda.org" "c:/Users/wjb/org/lulu.agenda.org" "c:/Users/wjb/org/inbox.agenda.org" "c:/Users/wjb/org/habit.agenda.org" "c:/Users/wjb/org/daniel.agenda.org")))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
