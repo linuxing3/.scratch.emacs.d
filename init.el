@@ -403,7 +403,7 @@
   (setq org-ditaa-jar-path "~/.dotfiles/tools/ditaa.jar")
   (setq plantuml-default-exec-mode 'jar) ;; jar使用本地jar包生成图片
   (setq plantuml-jar-path "~/.dotfiles/tools/plantuml.jar")
-  (setq org-plantuml-jar-path plantuml-jar-path)
+  (setq org-plantuml-jar-path plantuml-jar-path))
 
 (use-package flycheck-plantuml
   :ensure t
@@ -411,6 +411,8 @@
   :config (flycheck-plantuml-setup))
 
 (use-package mpv)
+
+(require 'module-remote)
 
 (require 'editor+embark)
 
