@@ -956,7 +956,7 @@ This snippet adds a hook to =org-mode= buffers so that =efs/org-babel-tangle-con
 #+end_src
 * 个人信息
 #+begin_src emacs-lisp
-(setq bookmark-default-file "~/.dotfiles/custom/emacs/emacs-bookmarks")
+(setq bookmark-default-file "~/.dotfiles/custom/emacs/bookmarks-default.el")
 (setq custom-theme-directory "~/.dotfiles/custom/emacs/themes/")
 (setq user-full-name "Xing Wenju"
       user-mail-address "linuxing3@qq.com")

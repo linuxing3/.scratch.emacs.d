@@ -515,7 +515,7 @@
 
   (require 'module-org)
 
-(setq bookmark-default-file "~/.dotfiles/custom/emacs/emacs-bookmarks")
+(setq bookmark-default-file "~/.dotfiles/custom/emacs/bookmarks-default.el")
 (setq custom-theme-directory "~/.dotfiles/custom/emacs/themes/")
 (setq user-full-name "Xing Wenju"
       user-mail-address "linuxing3@qq.com")
