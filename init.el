@@ -2,8 +2,8 @@
   ;;       in Emacs and init.el will be generated automatically!
 
   ;; You will most likely need to adjust this font size for your system!
-  (defvar efs/default-font-size 160)
-  (defvar efs/default-variable-font-size 160)
+  (defvar efs/default-font-size 180)
+  (defvar efs/default-variable-font-size 180)
 
   ;; Make frame transparency overridable
   (defvar efs/frame-transparency '(90 . 90))
@@ -360,6 +360,36 @@
     :config
     (evil-collection-define-key 'normal 'dired-mode-map
       "H" 'dired-hide-dotfiles-mode))
+
+  (use-package openwith
+    :config
+    (when (require 'openwith nil 'noerror)
+      (setq openwith-associations
+            (list
+             (list (openwith-make-extension-regexp
+                    '("mpg" "mpeg" "mp3" "mp4"
+                      "avi" "wmv" "wav" "mov" "flv"
+                      "ogm" "ogg" "mkv"))
+                   "mpv"
+                   '(file))
+             (list (openwith-make-extension-regexp
+                    '("xbm" "pbm" "pgm" "ppm" "pnm"
+                      "png" "gif" "bmp" "tif" "jpeg" "jpg"))
+                   "geeqie"
+                   '(file))
+             (list (openwith-make-extension-regexp
+                    '("doc" "xls" "ppt" "odt" "ods" "odg" "odp"))
+                   "libreoffice"
+                   '(file))
+             '("\\.lyx" "lyx" (file))
+             '("\\.chm" "kchmviewer" (file))
+             '("\\.pdf" "chromium" (file))
+             (list (openwith-make-extension-regexp
+                    '("ps" "ps.gz" "dvi"))
+                   "chromium"
+                   '(file))
+             ))
+      (openwith-mode 1)))
 
 (require 'iimage)
 (autoload 'iimage-mode "iimage" "Support Inline image minor mode." t)
