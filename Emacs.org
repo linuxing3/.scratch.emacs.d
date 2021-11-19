@@ -2,6 +2,7 @@
 #+PROPERTY: header-args:emacs-lisp :tangle ./init.el :mkdirp yes
 #+STARTUP: overview
 
+
 * 欢迎!
 
 本文件是我的Emacs配置文件，将被自动编译成 [[file:init.el][init.el]] 文件。
@@ -120,6 +121,8 @@ You can also use =M-x auto-package-update-now= to update right now!
 
 ** Load my private modules helpers.
 
+[[file:~/.evil.emacs.d/modules/][evil emacs module directory]]
+
 Here we just add some helper functions 
 
 #+begin_src emacs-lisp
@@ -203,14 +206,14 @@ This section configures basic UI settings that remove unneeded elements to make 
 
 ** Font Configuration
 
-I am using the [[https://github.com/tonsky/FiraCode][Fira Code]] and [[https://fonts.google.com/specimen/Cantarell][Cantarell]] fonts for this configuration which will more than likely need to be installed on your machine.  Both can usually be found in the various Linux distro package managers or downloaded from the links above.
+I am using the ~IBM Plex Mono~ font over the [[https://github.com/tonsky/FiraCode][Fira Code]] and [[https://fonts.google.com/specimen/Cantarell][Cantarell]] fonts for this configuration which will more than likely need to be installed on your machine.  Both can usually be found in the various Linux distro package managers or downloaded from the links above.
 
 #+begin_src emacs-lisp
 
-(set-face-attribute 'default nil :font "Fira Code" :height efs/default-font-size)
+(set-face-attribute 'default nil :font "IBM Plex Mono" :height efs/default-font-size)
 
 ;; Set the fixed pitch face
-(set-face-attribute 'fixed-pitch nil :font "Fira Code" :height efs/default-font-size)
+(set-face-attribute 'fixed-pitch nil :font "IBM Plex Mono" :height efs/default-font-size)
 
 ;; Set the variable pitch face
 (set-face-attribute 'variable-pitch nil :font "Cantarell" :height efs/default-variable-font-size :weight 'regular)
