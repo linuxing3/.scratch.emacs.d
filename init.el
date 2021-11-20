@@ -770,7 +770,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(ox-rss simple-httpd ox-hugo org-journal org-pomodoro elfeed-org ox-reveal org-brain org-download htmlize)))
+   '(wgrep ox-rss simple-httpd ox-hugo org-journal org-pomodoro elfeed-org ox-reveal org-brain org-download htmlize)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
