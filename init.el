@@ -123,10 +123,10 @@
                   eshell-mode-hook))
     (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
-(set-face-attribute 'default nil :font "IBM Plex Mono" :height efs/default-font-size)
+(set-face-attribute 'default nil :font "BlexMono NF" :height efs/default-font-size)
 
 ;; Set the fixed pitch face
-(set-face-attribute 'fixed-pitch nil :font "IBM Plex Mono" :height efs/default-font-size)
+(set-face-attribute 'fixed-pitch nil :font "BlexMono NF" :height efs/default-font-size)
 
 ;; Set the variable pitch face
 (set-face-attribute 'variable-pitch nil :font "Cantarell" :height efs/default-variable-font-size :weight 'regular)
@@ -800,7 +800,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(wgrep ox-rss simple-httpd ox-hugo org-journal org-pomodoro elfeed-org ox-reveal org-brain org-download htmlize)))
+   '(forge simple-httpd ox-hugo org-journal org-pomodoro elfeed-org ox-reveal org-brain org-download htmlize)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
