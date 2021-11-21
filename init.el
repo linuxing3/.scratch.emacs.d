@@ -204,54 +204,6 @@
   :init (doom-modeline-mode 1)
   :custom ((doom-modeline-height 15)))
 
-  (use-package which-key
-    :defer 0
-    :diminish which-key-mode
-    :config
-    (which-key-mode)
-    (setq which-key-idle-delay 1))
-
-  (use-package ivy
-    :diminish
-    :bind (("C-s" . swiper)
-           :map ivy-minibuffer-map
-           ("TAB" . ivy-alt-done)
-           ("C-l" . ivy-alt-done)
-           ("C-j" . ivy-next-line)
-           ("C-k" . ivy-previous-line)
-           :map ivy-switch-buffer-map
-           ("C-k" . ivy-previous-line)
-           ("C-l" . ivy-done)
-           ("C-d" . ivy-switch-buffer-kill)
-           :map ivy-reverse-i-search-map
-           ("C-k" . ivy-previous-line)
-           ("C-d" . ivy-reverse-i-search-kill))
-    :config
-    (ivy-mode 1))
-
-  (use-package ivy-rich
-    :after ivy
-    :init
-    (ivy-rich-mode 1))
-
-  (use-package counsel
-    :bind (("C-M-j" . 'counsel-switch-buffer)
-           :map minibuffer-local-map
-           ("C-r" . 'counsel-minibuffer-history))
-    :custom
-    (counsel-linux-app-format-function #'counsel-linux-app-format-function-name-only)
-    :config
-    (counsel-mode 1))
-
-  (use-package ivy-prescient
-    :after counsel
-    :custom
-    (ivy-prescient-enable-filtering nil)
-    :config
-    ;; Uncomment the following line to have sorting remembered across sessions!
-    ;(prescient-persist-mode 1)
-    (ivy-prescient-mode 1))
-
   (use-package helpful
     :commands (helpful-callable helpful-variable helpful-command helpful-key)
     :custom
@@ -274,6 +226,15 @@
 
   (efs/leader-keys
     "cs" '(hydra-text-scale/body :which-key "scale text"))
+
+  (use-package which-key
+    :defer 0
+    :diminish which-key-mode
+    :config
+    (which-key-mode)
+    (setq which-key-idle-delay 1))
+
+(require 'editor+embark)
 
   (use-package term
     :commands term
@@ -443,8 +404,6 @@
 (use-package mpv)
 
 (require 'module-remote)
-
-(require 'editor+embark)
 
   (defun efs/org-font-setup ()
     ;; Replace list hyphen with dot
@@ -646,7 +605,7 @@
   (use-package projectile
     :diminish projectile-mode
     :config (projectile-mode)
-    :custom ((projectile-completion-system 'ivy))
+    ;; :custom ((projectile-completion-system 'ivy))
     :bind-keymap
     ("C-c p" . projectile-command-map)
     :init
@@ -794,16 +753,3 @@
 
   ;; Make gc pauses faster by decreasing the threshold.
   (setq gc-cons-threshold (* 2 1000 1000))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(forge simple-httpd ox-hugo org-journal org-pomodoro elfeed-org ox-reveal org-brain org-download htmlize)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )

@@ -1,7 +1,3 @@
-  (use-package lsp-ivy
-    ;;:load-path "./localelpa/lsp-ivy"
-    :after lsp)
-
   (use-package python-mode
     :ensure t
     :hook (python-mode . lsp-deferred)
