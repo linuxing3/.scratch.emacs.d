@@ -389,7 +389,7 @@ This is an example of using [[https://github.com/abo-abo/hydra][Hydra]] to desig
 
 #+end_src
 
-* Completion
+* 补全和查找
 ** Ivy and Counsel & Vertico and Consult
 
 [[https://oremacs.com/swiper/][Ivy]] is an excellent completion framework for Emacs.  It provides a minimal yet powerful selection menu that appears when you open files, switch buffers, and for many other tasks in Emacs.  Counsel is a customized set of commands to replace `find-file` with `counsel-find-file`, etc which provide useful commands for each of the default completion commands.
@@ -398,7 +398,7 @@ This is an example of using [[https://github.com/abo-abo/hydra][Hydra]] to desig
 
 #+begin_src emacs-lisp
 (require 'core-default)
-(linuxing3/better-ivy-h) ;; use ivy to complete anything
+(linuxing3/better-ivy-h) ;; use ivy to complete anything, vertico is another options 
 (require 'editor+embark) ;; enable embark tool
 (require 'editor+consult) ;; enable consult than swiper
 #+end_src
