@@ -169,7 +169,7 @@ This section configures basic UI settings that remove unneeded elements to make 
   (setq show-paren-delay 0)
   (setq dired-dwim-target t)
 
-  ;; Make modern look
+8  ;; Make modern look
   (show-paren-mode  1)
   (tool-bar-mode -1)          ; Disable the toolbar
   (tooltip-mode -1)           ; Disable tooltips
@@ -210,10 +210,10 @@ I am using the ~IBM Plex Mono~ font over the [[https://github.com/tonsky/FiraCod
 
 #+begin_src emacs-lisp
 
-(set-face-attribute 'default nil :font "Source Code Pro" :height efs/default-font-size)
+(set-face-attribute 'default nil :font "PlexMono NF" :height efs/default-font-size)
 
 ;; Set the fixed pitch face
-(set-face-attribute 'fixed-pitch nil :font "Source Code Pro" :height efs/default-font-size)
+(set-face-attribute 'fixed-pitch nil :font "PlexMono NF" :height efs/default-font-size)
 
 ;; Set the variable pitch face
 (set-face-attribute 'variable-pitch nil :font "Cantarell" :height efs/default-variable-font-size :weight 'regular)
