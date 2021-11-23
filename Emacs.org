@@ -2,7 +2,6 @@
 #+PROPERTY: header-args:emacs-lisp :tangle ./init.el :mkdirp yes
 #+STARTUP: overview
 
-
 * 欢迎!
 
 本文件是我的Emacs配置文件，将被自动编译成 [[file:init.el][init.el]] 文件。
