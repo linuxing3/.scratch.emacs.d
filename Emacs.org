@@ -206,9 +206,12 @@ This section configures basic UI settings that remove unneeded elements to make 
 
 ** Font Configuration
 
-I am using the ~BlexMono NF~ font over the [[https://github.com/tonsky/FiraCode][Fira Code]] and [[https://fonts.google.com/specimen/Cantarell][Cantarell]] fonts for this configuration which will more than likely need to be installed on your machine.  Both can usually be found in the various Linux distro package managers or downloaded from the links above.
+I am using the ~Droid Sans Mono~ and ~BlexMono NF~ font over the [[https://github.com/tonsky/FiraCode][Fira Code]] and [[https://fonts.google.com/specimen/Cantarell][Cantarell]] fonts for this configuration which will more than likely need to be installed on your machine.  Both can usually be found in the various Linux distro package managers or downloaded from the links above.
 
 #+begin_src emacs-lisp
+
+(add-to-list 'default-frame-alist
+            '(font . "Droid Sans Mono-16:antialias=standard"))
 
 (set-face-attribute 'default nil :font "Droid Sans Mono" :height efs/default-font-size)
 
@@ -250,7 +253,7 @@ I am using the ~BlexMono NF~ font over the [[https://github.com/tonsky/FiraCode]
 
 * 键盘配置
 
-This configuration uses [[https://evil.readthedocs.io/en/latest/index.html][evil-mode]] for a Vi-like modal editing experience.  [[https://github.com/noctuid/general.el][general.el]] is used for easy keybinding configuration that integrates well with which-key.  [[https://github.com/emacs-evil/evil-collection][evil-collection]] is used to automatically configure various Emacs modes with Vi-like keybindings for evil-mode.
+[[https://github.com/noctuid/general.el][general.el]] is used for easy keybinding configuration that integrates well with which-key.
 
 #+begin_src emacs-lisp
 
@@ -269,7 +272,15 @@ This configuration uses [[https://evil.readthedocs.io/en/latest/index.html][evil
       "t"  '(:ignore t :which-key "toggles")
       "tt" '(counsel-load-theme :which-key "choose theme")
       "fde" '(lambda () (interactive) (find-file (expand-file-name "~/emacs-repos/emacs-from-scratch/Emacs.org")))))
+#+end_src
 
+** Evil mode 
+
+This configuration uses [[https://evil.readthedocs.io/en/latest/index.html][evil-mode]] for a Vi-like modal editing experience.
+
+[[https://github.com/emacs-evil/evil-collection][evil-collection]] is used to automatically configure various Emacs modes with Vi-like keybindings for evil-mode.
+
+#+begin_src emacs-lisp
   (use-package evil
     :init
     (setq evil-want-integration t)
@@ -671,27 +682,7 @@ current directory, instead of this Dired buffer's current directory.
 #+end_src
 
 * 应用程序
-
-** Some App
-
-This is an example of configuring another non-Emacs application using org-mode.  Not only do we write out the configuration at =.config/some-app/config=, we also compute the value that gets stored in this configuration from the Emacs Lisp block above it.
-
-#+NAME: the-value
-#+begin_src emacs-lisp :tangle no
-
-  (+ 55 100)
-
-#+end_src
-
-*NOTE*: Set the =:tangle= parameter below to =.config/some-app/config= for this to work!
-
-#+begin_src conf :tangle no :noweb yes
-
-  value=<<the-value()>>
-
-#+end_src
-
-*** Plantuml drawing tools
+** Plantuml drawing tools
 
 #+begin_src emacs-lisp
 (require 'iimage)
@@ -744,12 +735,12 @@ This is an example of configuring another non-Emacs application using org-mode. 
   :config (flycheck-plantuml-setup))
 
 #+end_src
-*** MPV Player
+** MPV Player
 
 #+begin_src emacs-lisp
 (use-package mpv)
 #+end_src
-*** Ivy-youtube
+** Ivy-youtube
 #+begin_src emacs-lisp :tangle no
 (use-package ivy-youtube
   :config
@@ -759,12 +750,12 @@ This is an example of configuring another non-Emacs application using org-mode. 
 #+RESULTS:
 : t
 
-*** remote editing
+** remote editing
 使用 ~plink~ and ~putty~ 进行远程编辑
 #+begin_src emacs-lisp
 (require 'module-remote)
 #+end_src
-*** email
+** email
 
 Use ~mu4e~ as email client
 
@@ -1082,576 +1073,10 @@ Instead of using =doom= macros like =map!=, which is not very convenient to migr
 #+end_src
 
 * 软件开发
-** 语言 Languages
-
-*** IDE Features with lsp-mode
-
-**** lsp-mode
-
-We use the excellent [[https://emacs-lsp.github.io/lsp-mode/][lsp-mode]] to enable IDE-like functionality for many different programming languages via "language servers" that speak the [[https://microsoft.github.io/language-server-protocol/][Language Server Protocol]].  Before trying to set up =lsp-mode= for a particular language, check out the [[https://emacs-lsp.github.io/lsp-mode/page/languages/][documentation for your language]] so that you can learn which language servers are available and how to install them.
-
-The =lsp-keymap-prefix= setting enables you to define a prefix for where =lsp-mode='s default keybindings will be added.  I *highly recommend* using the prefix to find out what you can do with =lsp-mode= in a buffer.
-
-The =which-key= integration adds helpful descriptions of the various keys so you should be able to learn a lot just by pressing =C-c l= in a =lsp-mode= buffer and trying different things that you find there.
-
-#+begin_src emacs-lisp
-
-  (defun efs/lsp-mode-setup ()
-    (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
-    (lsp-headerline-breadcrumb-mode))
-
-  (use-package lsp-mode
-    ;;:load-path "./localelpa/lsp-mode"
-    :commands (lsp lsp-deferred)
-    :hook (lsp-mode . efs/lsp-mode-setup)
-    :init
-    (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
-    :config
-    (lsp-enable-which-key-integration t))
-
-#+end_src
-
-#+RESULTS:
-| efs/lsp-mode-setup |
-
-**** lsp-ui
-
-[[https://emacs-lsp.github.io/lsp-ui/][lsp-ui]] is a set of UI enhancements built on top of =lsp-mode= which make Emacs feel even more like an IDE.  Check out the screenshots on the =lsp-ui= homepage (linked at the beginning of this paragraph) to see examples of what it can do.
-
-#+begin_src emacs-lisp
- 
-  (use-package lsp-ui
-    ;;:load-path "./localelpa/lsp-ui"
-    :hook (lsp-mode . lsp-ui-mode)
-    :custom
-    (lsp-ui-doc-position 'bottom))
-
-#+end_src
-
-#+RESULTS:
-| lsp-ui-mode | efs/lsp-mode-setup |
-
-**** lsp-treemacs
-
-[[https://github.com/emacs-lsp/lsp-treemacs][lsp-treemacs]] provides nice tree views for different aspects of your code like symbols in a file, references of a symbol, or diagnostic messages (errors and warnings) that are found in your code.
-
-Try these commands with =M-x=:
-
-- =lsp-treemacs-symbols= - Show a tree view of the symbols in the current file
-- =lsp-treemacs-references= - Show a tree view for the references of the symbol under the cursor
-- =lsp-treemacs-error-list= - Show a tree view for the diagnostic messages in the project
-
-This package is built on the [[https://github.com/Alexander-Miller/treemacs][treemacs]] package which might be of some interest to you if you like to have a file browser at the left side of your screen in your editor.
-
-#+begin_src emacs-lisp
-
-  (use-package lsp-treemacs
-    ;;:load-path "./localelpa/lsp-treemacs"
-    :after lsp)
-
-#+end_src
-
-#+RESULTS:
-
-**** lsp-ivy
-
-[[https://github.com/emacs-lsp/lsp-ivy][lsp-ivy]] integrates Ivy with =lsp-mode= to make it easy to search for things by name in your code.  When you run these commands, a prompt will appear in the minibuffer allowing you to type part of the name of a symbol in your code.  Results will be populated in the minibuffer so that you can find what you're looking for and jump to that location in the code upon selecting the result.
-
-Try these commands with =M-x=:
-
-- =lsp-ivy-workspace-symbol= - Search for a symbol name in the current project workspace
-- =lsp-ivy-global-workspace-symbol= - Search for a symbol name in all active project workspaces
 
 #+begin_src emacs-lisp :tangle no
-
-  (use-package lsp-ivy
-    ;;:load-path "./localelpa/lsp-ivy"
-    :after lsp)
-
+(require 'editor+ide)
 #+end_src
-
-#+RESULTS:
-
-*** Debugging with dap-mode
-
-[[https://emacs-lsp.github.io/dap-mode/][dap-mode]] is an excellent package for bringing rich debugging capabilities to Emacs via the [[https://microsoft.github.io/debug-adapter-protocol/][Debug Adapter Protocol]].  You should check out the [[https://emacs-lsp.github.io/dap-mode/page/configuration/][configuration docs]] to learn how to configure the debugger for your language.  Also make sure to check out the documentation for the debug adapter to see what configuration parameters are available to use for your debug templates!
-
-#+begin_src emacs-lisp
-
-  (use-package dap-mode
-    ;;:load-path "./localelpa/dap-mode"
-    ;; Uncomment the config below if you want all UI panes to be hidden by default!
-    ;; :custom
-    ;; (lsp-enable-dap-auto-configure nil)
-    ;; :config
-    ;; (dap-ui-mode 1)
-    :commands dap-debug
-    :config
-    ;; Set up Node debugging
-    (require 'dap-node)
-    (require 'dap-python)
-    (require 'dap-pwsh)
-    (dap-node-setup) ;; Automatically installs Node debug adapter if needed
-
-    ;; Bind `C-c l d` to `dap-hydra` for easy access
-    (general-define-key
-      :keymaps 'lsp-mode-map
-      :prefix lsp-keymap-prefix
-      "d" '(dap-hydra t :wk "debugger")))
-
-#+end_src
-
-#+RESULTS:
-
-*** TypeScript
-
-This is a basic configuration for the TypeScript language so that =.ts= files activate =typescript-mode= when opened.  We're also adding a hook to =typescript-mode-hook= to call =lsp-deferred= so that we activate =lsp-mode= to get LSP features every time we edit TypeScript code.
-
-#+begin_src emacs-lisp
-
-  (use-package typescript-mode
-    :mode "\\.ts\\'"
-    :hook (typescript-mode . lsp-deferred)
-    :config
-    (setq typescript-indent-level 2))
-
-#+end_src
-
-
-*Important note!*  For =lsp-mode= to work with TypeScript (and JavaScript) you will need to install a language server on your machine.  If you have Node.js installed, the easiest way to do that is by running the following command:
-
-#+begin_src shell :tangle no
-
-npm install -g typescript-language-server typescript
-
-#+end_src
-
-This will install the [[https://github.com/theia-ide/typescript-language-server][typescript-language-server]] and the TypeScript compiler package.
-
-*** Python
-
-We use =lsp-mode= and =dap-mode= to provide a more complete development environment for Python in Emacs.  Check out [[https://emacs-lsp.github.io/lsp-mode/page/lsp-pyls/][the =pyls= configuration]] in the =lsp-mode= documentation for more details.
-
-Make sure you have the =pyls= language server installed before trying =lsp-mode=!
-
-#+begin_src sh :tangle no
-
-pip install --user "python-language-server[all]"
-
-#+end_src
-
-There are a number of other language servers for Python so if you find that =pyls= doesn't work for you, consult the =lsp-mode= [[https://emacs-lsp.github.io/lsp-mode/page/languages/][language configuration documentation]] to try the others!
-
-#+begin_src emacs-lisp :tangle yes
-
-  (use-package python-mode
-    :ensure t
-    :hook (python-mode . lsp-deferred)
-    :custom
-    ;; NOTE: Set these if Python 3 is called "python3" on your system!
-    (python-shell-interpreter "python3")
-    (dap-python-executable "python3")
-    (dap-python-debugger 'debugpy)
-    :config
-    (require 'dap-python)
-    (dap-register-debug-template "My App"
-        (list :type "python"
-                :args "-i"
-                :cwd nil
-                :env '(("DEBUG" . "1"))
-                :target-module (expand-file-name "~/src/myapp/.env/bin/myapp")
-                :request "launch"
-                :name "My App")))
-
-
-#+end_src
-
-You can use the pyvenv package to use =virtualenv= environments in Emacs.  The =pyvenv-activate= command should configure Emacs to cause =lsp-mode= and =dap-mode= to use the virtual environment when they are loaded, just select the path to your virtual environment before loading your project.
-
-#+begin_src emacs-lisp :tangle no
-
-  (use-package pyvenv
-    :after python-mode
-    :config
-    (pyvenv-mode 1))
-
-#+end_src
-
-*** [完成] go
-CLOSED: [2021-11-12 周五 16:17]
-#+begin_src emacs-lisp
-(use-package go-mode
-  :ensure t
-  :hook ((go-mode . lsp-deferred))
-  :config
-  (require 'dap-go)
-  (dap-go-setup)
-  (if IS-WINDOWS (dap-register-debug-template
-   "Launch Unoptimized Debug Package"
-   (list :type "go"
-	 :request "launch"
-	 :name "Launch Unoptimized Debug Package"
-	 :mode "debug"
-	 :program "${workspacefolder}/main.exe"
-	 :buildFlags "-gcflags '-N -l'"
-	 :args nil
-	 :env nil
-	 :envFile nil))))
-
-(use-package go-eldoc
-  :ensure t
-  :hook ((go-mode . go-eldoc-setup))
-  :config
-  (set-face-attribute 'eldoc-highlight-function-argument nil
-                      :underline t :foreground "green"
-                      :weight 'bold))
-
-#+end_src
-
-#+RESULTS:
-| go-eldoc |
-
-*** [完成] rust
-CLOSED: [2021-11-12 周五 16:17]
-
-#+begin_src emacs-lisp
-(use-package rust-mode
-  :hook ((rust-mode . lsp-deferred))
-  :config
-  ;; (require 'dap-rust)
-  (require 'dap-gdb-lldb)
-  (dap-gdb-lldb-setup)
-  (dap-register-debug-template "Rust::GDB Run Configuration"
-                               (list :type "gdb"
-                                     :request "launch"
-                                     :name "GDB::Run"
-				     :gdbpath "rust-gdb"
-                                     :target nil
-                                     :cwd nil)))
-#+end_src
-
-** 补全 Company Mode
-
-[[http://company-mode.github.io/][Company Mode]] provides a nicer in-buffer completion interface than =completion-at-point= which is more reminiscent of what you would expect from an IDE.  We add a simple configuration to make the keybindings a little more useful (=TAB= now completes the selection and initiates completion at the current location if needed).
-
-We also use [[https://github.com/sebastiencs/company-box][company-box]] to further enhance the look of the completions with icons and better overall presentation.
-
-#+begin_src emacs-lisp :tangle yes
-
-(use-package company
-  :ensure t
-  :init
-  (setq company-minimum-prefix-length 3)
-  (setq tab-always-indent 'complete)
-  :config
-  (define-key company-active-map (kbd "TAB") 'company-complete-common-or-cycle)
-  (define-key company-active-map (kbd "<tab>") 'company-complete-common-or-cycle)
-  (define-key company-active-map (kbd "S-TAB") 'company-select-previous)
-  (define-key company-active-map (kbd "<backtab>") 'company-select-previous)
-  (define-key company-mode-map [remap indent-for-tab-command] 'company-indent-for-tab-command)
-  (defun company-indent-for-tab-command (&optional arg)
-    (interactive "P")
-    (let ((completion-at-point-functions-saved completion-at-point-functions)
-	  (completion-at-point-functions '(company-complete-common-wrapper)))
-      (indent-for-tab-command arg)))
-  (defun company-complete-common-wrapper ()
-    (let ((completion-at-point-functions completion-at-point-functions-saved))
-      (company-complete-common))))
-(add-hook 'after-init-hook 'global-company-mode)
-
-(use-package flycheck)
-
-(use-package company-box
-    :hook (company-mode . company-box-mode))
-
-(use-package smartparens
-  ;; Auto-close delimiters and blocks as you type. It's more powerful than that,
-  ;; but that is all Doom uses it for.
-  :commands sp-pair sp-local-pair sp-with-modes sp-point-in-comment sp-point-in-string
-  :config
-  ;; smartparens recognizes `slime-mrepl-mode', but not `sly-mrepl-mode', so...
-  (add-to-list 'sp-lisp-modes 'sly-mrepl-mode)
-  ;; Load default smartparens rules for various languages
-  (require 'smartparens-config)
-  ;; Overlays are too distracting and not terribly helpful. show-parens does
-  ;; this for us already (and is faster), so...
-  (setq sp-highlight-pair-overlay nil
-        sp-highlight-wrap-overlay nil
-        sp-highlight-wrap-tag-overlay nil)
-  (with-eval-after-load 'evil
-    ;; But if someone does want overlays enabled, evil users will be stricken
-    ;; with an off-by-one issue where smartparens assumes you're outside the
-    ;; pair when you're really at the last character in insert mode. We must
-    ;; correct this vile injustice.
-    (setq sp-show-pair-from-inside t)
-    ;; ...and stay highlighted until we've truly escaped the pair!
-    (setq sp-cancel-autoskip-on-backward-movement nil))
-
-  ;; The default is 100, because smartparen's scans are relatively expensive
-  ;; (especially with large pair lists for some modes), we reduce it, as a
-  ;; better compromise between performance and accuracy.
-  (setq sp-max-prefix-length 25)
-  ;; No pair has any business being longer than 4 characters; if they must, set
-  ;; it buffer-locally. It's less work for smartparens.
-  (setq sp-max-pair-length 4)
-  ;; This isn't always smart enough to determine when we're in a string or not.
-  ;; See https://github.com/Fuco1/smartparens/issues/783.
-  (setq sp-escape-quotes-after-insert nil)
-
-  ;; Silence some harmless but annoying echo-area spam
-  (dolist (key '(:unmatched-expression :no-matching-tag))
-    (setf (alist-get key sp-message-alist) nil))
-
-  (add-hook 'minibuffer-setup-hook
-    (defun doom-init-smartparens-in-minibuffer-maybe-h ()
-      "Enable `smartparens-mode' in the minibuffer, during `eval-expression',
-`pp-eval-expression' or `evil-ex'."
-      (when (memq this-command '(eval-expression pp-eval-expression evil-ex))
-        (smartparens-mode))))
-
-  ;; You're likely writing lisp in the minibuffer, therefore, disable these
-  ;; quote pairs, which lisps doesn't use for strings:
-  (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
-  (sp-local-pair 'minibuffer-inactive-mode "`" nil :actions nil)
-
-  ;; Smartparens breaks evil-mode's replace state
-  (defvar doom-buffer-smartparens-mode nil)
-  (add-hook 'evil-replace-state-exit-hook
-    (defun doom-enable-smartparens-mode-maybe-h ()
-      (when doom-buffer-smartparens-mode
-        (turn-on-smartparens-mode)
-        (kill-local-variable 'doom-buffer-smartparens-mode))))
-  (add-hook 'evil-replace-state-entry-hook
-    (defun doom-disable-smartparens-mode-maybe-h ()
-      (when smartparens-mode
-        (setq-local doom-buffer-smartparens-mode t)
-        (turn-off-smartparens-mode))))
-
-  (smartparens-global-mode +1))
-#+end_src
-
-** 项目 Projectile
-
-[[https://projectile.mx/][Projectile]] is a project management library for Emacs which makes it a lot easier to navigate around code projects for various languages.  Many packages integrate with Projectile so it's a good idea to have it installed even if you don't use its commands directly.
-
-#+begin_src emacs-lisp
-
-  (use-package projectile
-    :diminish projectile-mode
-    :config (projectile-mode)
-    ;; :custom ((projectile-completion-system 'ivy))
-    :bind-keymap
-    ("C-c p" . projectile-command-map)
-    :init
-    ;; NOTE: Set this to the folder where you keep your Git repos!
-    (when (file-directory-p "~/workspace")
-      (setq projectile-project-search-path '("~/workspace")))
-    (setq projectile-switch-project-action #'projectile-dired))
-
-  (use-package counsel-projectile
-    :after projectile
-    :config (counsel-projectile-mode))
-
-  (require 'project)
-  (use-package project-x
-    :after project
-    :load-path "~/.evil.emacs.d/modules/project-x.el"
-    :config
-    (setq project-x-save-interval 600)    ;Save project state every 10 min
-    (project-x-mode 1))
-#+end_src
-
-** 版本 Magit
-
-[[https://magit.vc/][Magit]] is the best Git interface I've ever used.  Common Git operations are easy to execute quickly using Magit's command panel system.
-
-#+begin_src emacs-lisp :tangle no
-
-  (use-package magit
-    :commands magit-status
-    :custom
-    (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
-
-  ;; NOTE: Make sure to configure a GitHub token before using this package!
-  ;; - https://magit.vc/manual/forge/Token-Creation.html#Token-Creation
-  ;; - https://magit.vc/manual/ghub/Getting-Started.html#Getting-Started
-  (use-package forge
-    :after magit)
-
-#+end_src
-
-** 注释 Commenting
-
-Emacs' built in commenting functionality =comment-dwim= (usually bound to =M-;=) doesn't always comment things in the way you might expect so we use [[https://github.com/redguardtoo/evil-nerd-commenter][evil-nerd-commenter]] to provide a more familiar behavior.  I've bound it to =M-/= since other editors sometimes use this binding but you could also replace Emacs' =M-;= binding with this command.
-
-#+begin_src emacs-lisp
-
-  (use-package evil-nerd-commenter
-    :bind ("C-/" . evilnc-comment-or-uncomment-lines))
-
-#+end_src
-
-#+RESULTS:
-: evilnc-comment-or-uncomment-lines
-
-** 服务 External Services
-#+begin_src emacs-lisp
-(use-package prodigy
-  ;;:load-path "./localelpa/prodigy"
-  :config
-        (prodigy-define-service
-          :name "Information Center: El Universal"
-          :command "scrapy"
-          :args '("crawl" "eluniversal")
-          :cwd "~/OneDrive/shared/InformationCenter"
-          :tags '(work)
-          :stop-signal 'sigkill
-          :kill-process-buffer-on-stop t)
-
-        ;; NOTE: 进行培训PPT展示
-        (prodigy-define-service
-          :name "Run Marp Presentation"
-          :command "marp"
-          :args '("-s" "-w" ".")
-          :cwd "~/OneDrive/Documents/present"
-          :tags '(training)
-          :stop-signal 'sigkill
-          :kill-process-buffer-on-stop t)
-
-        
-        ;; NOTE: 进行HUGO博客预览
-        (prodigy-define-service
-          :name "Run Hugo Site Server"
-          :command "hugo"
-          :args '("server")
-          :cwd "~/workspace/awesome-hugo-blog"
-          :tags '(work)
-          :stop-signal 'sigkill
-          :kill-process-buffer-on-stop t))
-
-#+end_src
-
-#+RESULTS:
-: t
-
-** 高亮 Highlight todo
-
-#+begin_src emacs-lisp
-(use-package hl-todo
-  ;;:load-path "./localelpa/hl-todo"
-  :hook (prog-mode . hl-todo-mode)
-  :commands hl-todo-mode
-  :config
-  (setq hl-todo-highlight-punctuation ":"
-        hl-todo-keyword-faces
-        `(("TODO"  . ,(face-foreground 'warning))
-          ("FIXME" . ,(face-foreground 'error))
-          ("HACK"  . ,(face-foreground 'font-lock-constant-face))
-          ("REVIEW"  . ,(face-foreground 'font-lock-keyword-face))
-          ("NOTE"  . ,(face-foreground 'success))
-          ("DEPRECATED" . ,(face-foreground 'font-lock-doc-face))))
-  (when hl-todo-mode
-        (hl-todo-mode -1)
-        (hl-todo-mode +1)))
-#+end_src
-
-#+RESULTS:
-| hl-todo-mode | rainbow-delimiters-mode |
-
-** 彩色 Rainbow Delimiters
-
-[[https://github.com/Fanael/rainbow-delimiters][rainbow-delimiters]] is useful in programming modes because it colorizes nested parentheses and brackets according to their nesting depth.  This makes it a lot easier to visually match parentheses in Emacs Lisp code without having to count them yourself.
-
-#+begin_src emacs-lisp
-
-(use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode))
-
-#+end_src
-** format 
-
-#+begin_src emacs-lisp
-(use-package format-all
-  :hook
-  (prog-mode . format-all-mode))
-#+end_src
-
-#+RESULTS:
-| format-all-mode | rainbow-delimiters-mode | hl-todo-mode |
-
-** 代码片段 Snippets
-
-#+begin_src emacs-lisp
-;; yasnippet mode
-(defvar +snippets-dir "~/.dotfiles/custom/emacs/snippets"
-  "Directory where `yasnippet' will search for your private snippets.")
-
-(defun +snippet--ensure-dir (dir)
-  (unless (file-directory-p dir)
-    (if (y-or-n-p (format "%S doesn't exist. Create it?" (abbreviate-file-name dir)))
-        (make-directory dir t)
-      (error "%S doesn't exist" (abbreviate-file-name dir)))))
-
-(defun +snippets/new ()
-  "Create a new snippet in `+snippets-dir'."
-  (interactive)
-  (let ((default-directory
-          (expand-file-name (symbol-name major-mode)
-                            +snippets-dir)))
-    (+snippet--ensure-dir default-directory)
-    (with-current-buffer (switch-to-buffer "untitled-snippet")
-      (snippet-mode)
-      (erase-buffer)
-      (yas-expand-snippet (concat "# -*- mode: snippet -*-\n"
-                                  "# name: $1\n"
-                                  "# uuid: $2\n"
-                                  "# key: ${3:trigger-key}${4:\n"
-                                  "# condition: t}\n"
-                                  "# --\n"
-                                  "$0"))
-      (when (bound-and-true-p evil-local-mode)
-        (evil-insert-state)))))
-
-(use-package yasnippet
-  :ensure t
-  :commands (yas-minor-mode-on
-             yas-expand
-             yas-expand-snippet
-             yas-lookup-snippet
-             yas-insert-snippet
-             yas-new-snippet
-             yas-visit-snippet-file
-             yas-activate-extra-mode
-             yas-deactivate-extra-mode
-             yas-maybe-expand-abbrev-key-filter)
-  :init
-  :config
-  (setq yas-snippet-dirs '(yas-installed-snippets-dir))
-  (add-to-list 'yas-snippet-dirs '+snippets-dir)
-  (yas-global-mode 1)
-  (yas-reload-all)
-  (setq yas-prompt-functions '(yas-dropdown-prompt
-			                   yas-maybe-ido-prompt
-			                   yas-completing-prompt)))
-
-(use-package auto-yasnippet
-  :ensure t
-  :config
-  ;; (global-set-key (kbd "C-S-w") #'aya-create)
-  ;; (global-set-key (kbd "C-S-y") #'aya-expand)
-  (setq aya-persist-snippets-dir +snippets-dir))
-
-(use-package doom-snippets
-  :load-path "./assets/doom-snippets"
-  :after yasnippet
-  :config
-  (add-to-list 'yas-snippet-dirs 'doom-snippets-dir))
-
-#+end_src
-
-#+RESULTS:
-: t
-
 * 运行时表现
 
 Dial the GC threshold back down so that garbage collection happens more frequently but in less time.
