@@ -339,7 +339,7 @@
              (list (openwith-make-extension-regexp
                     '("xbm" "pbm" "pgm" "ppm" "pnm"
                       "png" "gif" "bmp" "tif" "jpeg" "jpg"))
-                   "geeqie"
+                   "sxiv"
                    '(file))
              (list (openwith-make-extension-regexp
                     '("doc" "xls" "ppt" "odt" "ods" "odg" "odp"))
@@ -347,7 +347,7 @@
                    '(file))
              '("\\.lyx" "lyx" (file))
              '("\\.chm" "kchmviewer" (file))
-             '("\\.pdf" "chromium" (file))
+             '("\\.pdf" "zathura" (file))
              (list (openwith-make-extension-regexp
                     '("ps" "ps.gz" "dvi"))
                    "chromium"
