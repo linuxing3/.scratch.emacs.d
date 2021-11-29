@@ -1,0 +1,13 @@
+elpa/
+etc/
+var/
+packages/
+server/
+show-notes
+
+core
+
+ivy-youtube-history
+project-window-list
+*.elc
+*.data
