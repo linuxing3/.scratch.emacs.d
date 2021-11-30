@@ -877,7 +877,7 @@ This snippet adds a hook to =org-mode= buffers so that =efs/org-babel-tangle-con
 #+RESULTS:
 : ./localelpa/themes/
 * 键盘配置
-
+** 通用模式
 [[https://github.com/noctuid/general.el][general.el]] is used for easy keybinding configuration that integrates well with which-key.
 
 #+begin_src emacs-lisp :tangle no
@@ -899,7 +899,7 @@ This snippet adds a hook to =org-mode= buffers so that =efs/org-babel-tangle-con
       "fde" '(lambda () (interactive) (find-file (expand-file-name "~/emacs-repos/emacs-from-scratch/Emacs.org")))))
 #+end_src
 
-** Evil mode 
+** 魔态模式
 
 This configuration uses [[https://evil.readthedocs.io/en/latest/index.html][evil-mode]] for a Vi-like modal editing experience.
 
@@ -930,10 +930,6 @@ This configuration uses [[https://evil.readthedocs.io/en/latest/index.html][evil
     (evil-collection-init))
 
 #+end_src
-* 个人键绑定 
-
-All common binds in one file for better migration!!! Powered by =general=
-
 ** 猫态模式
 
 #+begin_src emacs-lisp
