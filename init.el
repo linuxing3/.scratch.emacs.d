@@ -156,45 +156,6 @@
 
 (when (display-graphic-p) (+modern-ui-chinese-h))
 
-  ;; Make ESC quit prompts
-  (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-
-  (use-package general
-    :after evil
-    :config
-    (general-create-definer efs/leader-keys
-      :keymaps '(normal insert visual emacs)
-      :prefix "SPC"
-      :global-prefix "C-SPC")
-
-    (efs/leader-keys
-      "t"  '(:ignore t :which-key "toggles")
-      "tt" '(counsel-load-theme :which-key "choose theme")
-      "fde" '(lambda () (interactive) (find-file (expand-file-name "~/emacs-repos/emacs-from-scratch/Emacs.org")))))
-
-  (use-package evil
-    :init
-    (setq evil-want-integration t)
-    (setq evil-want-keybinding nil)
-    (setq evil-want-C-u-scroll t)
-    (setq evil-want-C-i-jump nil)
-    :config
-    (evil-mode 1)
-    (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state) ;; insert mode escape to normal mode
-    (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join) ;; backward delete
-
-    ;; Use visual line motions even outside of visual-line-mode buffers
-    (evil-global-set-key 'motion "j" 'evil-next-visual-line)
-    (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
-
-    (evil-set-initial-state 'messages-buffer-mode 'normal)
-    (evil-set-initial-state 'dashboard-mode 'normal))
-
-  (use-package evil-collection
-    :after evil
-    :config
-    (evil-collection-init))
-
   (use-package command-log-mode
     :commands command-log-mode)
 
@@ -227,8 +188,8 @@
     ("k" text-scale-decrease "out")
     ("f" nil "finished" :exit t))
 
-  (efs/leader-keys
-    "cs" '(hydra-text-scale/body :which-key "scale text"))
+  ;;(efs/leader-keys
+  ;;  "cs" '(hydra-text-scale/body :which-key "scale text"))
 
   (use-package which-key
     :defer 0
@@ -273,9 +234,9 @@
     (add-to-list 'eshell-output-filter-functions 'eshell-truncate-buffer)
 
     ;; Bind some useful keys for evil-mode
-    (evil-define-key '(normal insert visual) eshell-mode-map (kbd "C-r") 'counsel-esh-history)
-    (evil-define-key '(normal insert visual) eshell-mode-map (kbd "<home>") 'eshell-bol)
-    (evil-normalize-keymaps)
+    ;; (evil-define-key '(normal insert visual) eshell-mode-map (kbd "C-r") 'counsel-esh-history)
+    ;; (evil-define-key '(normal insert visual) eshell-mode-map (kbd "<home>") 'eshell-bol)
+    ;; (evil-normalize-keymaps)
 
     (setq eshell-history-size         10000
           eshell-buffer-maximum-lines 10000
@@ -304,9 +265,10 @@
     (setq dired-dwim-target t)
     (defun linuxing3/dired-mode-setup ()(dired-hide-details-mode 1))
     (add-hook 'dired-mode-hook 'linuxing3/dired-mode-setup)
-    (evil-collection-define-key 'normal 'dired-mode-map
-      "h" 'dired-single-up-directory
-      "l" 'dired-single-buffer))
+    ;;(evil-collection-define-key 'normal 'dired-mode-map
+    ;;  "h" 'dired-single-up-directory
+    ;;  "l" 'dired-single-buffer)
+    )
 
   (use-package dired-single
     :commands (dired dired-jump))
@@ -325,8 +287,9 @@
   (use-package dired-hide-dotfiles
     :hook (dired-mode . dired-hide-dotfiles-mode)
     :config
-    (evil-collection-define-key 'normal 'dired-mode-map
-      "H" 'dired-hide-dotfiles-mode))
+    ;; (evil-collection-define-key 'normal 'dired-mode-map
+    ;;  "H" 'dired-hide-dotfiles-mode)
+   )
 
   (use-package openwith
     :config
@@ -342,7 +305,7 @@
              (list (openwith-make-extension-regexp
                     '("xbm" "pbm" "pgm" "ppm" "pnm"
                       "png" "gif" "bmp" "tif" "jpeg" "jpg"))
-                   "sxiv"
+                   "feh"
                    '(file))
              (list (openwith-make-extension-regexp
                     '("doc" "xls" "ppt" "odt" "ods" "odg" "odp"))
@@ -358,60 +321,15 @@
              ))
       (openwith-mode 1)))
 
-(require 'iimage)
-(autoload 'iimage-mode "iimage" "Support Inline image minor mode." t)
-(autoload 'turn-on-iimage-mode "iimage" "Turn on Inline image minor mode." t)
-(add-to-list 'iimage-mode-image-regex-alist '("@startuml\s+\\(.+\\)" . 1))
+(require 'lang+plantuml)
 
-
-(use-package plantuml-mode
-  :ensure t
-  :commands plantuml-download-jar
-  :config
-  (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
-  (add-to-list
-   'org-src-lang-modes '("plantuml" . plantuml))
-  ;; Rendering plantuml
-  (defun plantuml-render-buffer ()
-    (interactive)
-    (message "PLANTUML Start rendering")
-    (shell-command (concat "java -jar " plantuml-jar-path " "
-                           buffer-file-name))
-    (message (concat "PLANTUML Rendered:  " (buffer-name))))
-
-  ;; Image reloading
-  (defun reload-image-at-point ()
-    (interactive)
-    (message "reloading image at point in the current buffer...")
-    (image-refresh (get-text-property (point) 'display)))
-
-  ;; Image resizing and reloading
-  (defun resize-image-at-point ()
-    (interactive)
-    (message "resizing image at point in the current buffer123...")
-    (let* ((image-spec (get-text-property (point) 'display))
-           (file (cadr (member :file image-spec))))
-      (message (concat "resizing image..." file))
-      (shell-command (format "convert -resize %d %s %s "
-                             (* (window-width (selected-window)) (frame-char-width))
-                             file file))
-      (reload-image-at-point)))
-  :init
-  (setq org-ditaa-jar-path "~/.dotfiles/tools/ditaa.jar")
-  (setq plantuml-default-exec-mode 'jar) ;; jar使用本地jar包生成图片
-  (setq plantuml-jar-path "~/.dotfiles/tools/plantuml.jar")
-  (setq org-plantuml-jar-path plantuml-jar-path))
-
-(use-package flycheck-plantuml
-  :ensure t
-  :after plantuml-mode
-  :config (flycheck-plantuml-setup))
-
-(use-package mpv)
+(if IS-LINUX (use-package mpv))
 
 (require 'module-remote)
 
-(require 'module-input)
+(require 'app+mail)
+
+(if IS-LINUX (require 'module-input))
 
   (defun efs/org-font-setup ()
     ;; Replace list hyphen with dot
@@ -446,7 +364,7 @@
   (defun efs/org-mode-setup ()
     (setq-default fill-column 80)
     (auto-fill-mode 0)
-    (setq evil-auto-indent nil)
+    ;; (setq evil-auto-indent nil)
     (org-indent-mode)
     (variable-pitch-mode 1)
     (visual-line-mode 1))
@@ -526,7 +444,26 @@
       user-mail-address "linuxing3@qq.com")
 (setq browse-url-browser-function 'browse-url-chromium)
 
-  (require 'core-keybinds)
+(use-package meow
+  :load-path "./localelpa/meow")
+
+;; (require 'init-modal)
+(require 'init-modal-qwerty)
+
+ (require 'module-keybinds)
 
   ;; Make gc pauses faster by decreasing the threshold.
   (setq gc-cons-threshold (* 2 1000 1000))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(org-roam simple-httpd evil-org ox-hugo org-journal org-pomodoro elfeed-org ox-reveal org-brain org-download htmlize)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

@@ -251,61 +251,6 @@ I am using the ~Droid Sans Mono~ and ~BlexMono NF~ font over the [[https://githu
 
 #+RESULTS:
 
-* 键盘配置
-
-[[https://github.com/noctuid/general.el][general.el]] is used for easy keybinding configuration that integrates well with which-key.
-
-#+begin_src emacs-lisp
-
-  ;; Make ESC quit prompts
-  (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-
-  (use-package general
-    :after evil
-    :config
-    (general-create-definer efs/leader-keys
-      :keymaps '(normal insert visual emacs)
-      :prefix "SPC"
-      :global-prefix "C-SPC")
-
-    (efs/leader-keys
-      "t"  '(:ignore t :which-key "toggles")
-      "tt" '(counsel-load-theme :which-key "choose theme")
-      "fde" '(lambda () (interactive) (find-file (expand-file-name "~/emacs-repos/emacs-from-scratch/Emacs.org")))))
-#+end_src
-
-** Evil mode 
-
-This configuration uses [[https://evil.readthedocs.io/en/latest/index.html][evil-mode]] for a Vi-like modal editing experience.
-
-[[https://github.com/emacs-evil/evil-collection][evil-collection]] is used to automatically configure various Emacs modes with Vi-like keybindings for evil-mode.
-
-#+begin_src emacs-lisp
-  (use-package evil
-    :init
-    (setq evil-want-integration t)
-    (setq evil-want-keybinding nil)
-    (setq evil-want-C-u-scroll t)
-    (setq evil-want-C-i-jump nil)
-    :config
-    (evil-mode 1)
-    (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state) ;; insert mode escape to normal mode
-    (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join) ;; backward delete
-
-    ;; Use visual line motions even outside of visual-line-mode buffers
-    (evil-global-set-key 'motion "j" 'evil-next-visual-line)
-    (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
-
-    (evil-set-initial-state 'messages-buffer-mode 'normal)
-    (evil-set-initial-state 'dashboard-mode 'normal))
-
-  (use-package evil-collection
-    :after evil
-    :config
-    (evil-collection-init))
-
-#+end_src
-
 * 界面高级配置
 ** Command Log Mode
 
@@ -379,8 +324,8 @@ This is an example of using [[https://github.com/abo-abo/hydra][Hydra]] to desig
     ("k" text-scale-decrease "out")
     ("f" nil "finished" :exit t))
 
-  (efs/leader-keys
-    "cs" '(hydra-text-scale/body :which-key "scale text"))
+  ;;(efs/leader-keys
+  ;;  "cs" '(hydra-text-scale/body :which-key "scale text"))
 
 #+end_src
 
@@ -522,9 +467,9 @@ For more thoughts on Eshell, check out these articles by Pierre Neidhardt:
     (add-to-list 'eshell-output-filter-functions 'eshell-truncate-buffer)
 
     ;; Bind some useful keys for evil-mode
-    (evil-define-key '(normal insert visual) eshell-mode-map (kbd "C-r") 'counsel-esh-history)
-    (evil-define-key '(normal insert visual) eshell-mode-map (kbd "<home>") 'eshell-bol)
-    (evil-normalize-keymaps)
+    ;; (evil-define-key '(normal insert visual) eshell-mode-map (kbd "C-r") 'counsel-esh-history)
+    ;; (evil-define-key '(normal insert visual) eshell-mode-map (kbd "<home>") 'eshell-bol)
+    ;; (evil-normalize-keymaps)
 
     (setq eshell-history-size         10000
           eshell-buffer-maximum-lines 10000
@@ -626,9 +571,10 @@ current directory, instead of this Dired buffer's current directory.
     (setq dired-dwim-target t)
     (defun linuxing3/dired-mode-setup ()(dired-hide-details-mode 1))
     (add-hook 'dired-mode-hook 'linuxing3/dired-mode-setup)
-    (evil-collection-define-key 'normal 'dired-mode-map
-      "h" 'dired-single-up-directory
-      "l" 'dired-single-buffer))
+    ;;(evil-collection-define-key 'normal 'dired-mode-map
+    ;;  "h" 'dired-single-up-directory
+    ;;  "l" 'dired-single-buffer)
+    )
 
   (use-package dired-single
     :commands (dired dired-jump))
@@ -647,8 +593,9 @@ current directory, instead of this Dired buffer's current directory.
   (use-package dired-hide-dotfiles
     :hook (dired-mode . dired-hide-dotfiles-mode)
     :config
-    (evil-collection-define-key 'normal 'dired-mode-map
-      "H" 'dired-hide-dotfiles-mode))
+    ;; (evil-collection-define-key 'normal 'dired-mode-map
+    ;;  "H" 'dired-hide-dotfiles-mode)
+   )
 
   (use-package openwith
     :config
@@ -664,7 +611,7 @@ current directory, instead of this Dired buffer's current directory.
              (list (openwith-make-extension-regexp
                     '("xbm" "pbm" "pgm" "ppm" "pnm"
                       "png" "gif" "bmp" "tif" "jpeg" "jpg"))
-                   "sxiv"
+                   "feh"
                    '(file))
              (list (openwith-make-extension-regexp
                     '("doc" "xls" "ppt" "odt" "ods" "odg" "odp"))
@@ -685,60 +632,12 @@ current directory, instead of this Dired buffer's current directory.
 ** Plantuml drawing tools
 
 #+begin_src emacs-lisp
-(require 'iimage)
-(autoload 'iimage-mode "iimage" "Support Inline image minor mode." t)
-(autoload 'turn-on-iimage-mode "iimage" "Turn on Inline image minor mode." t)
-(add-to-list 'iimage-mode-image-regex-alist '("@startuml\s+\\(.+\\)" . 1))
-
-
-(use-package plantuml-mode
-  :ensure t
-  :commands plantuml-download-jar
-  :config
-  (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
-  (add-to-list
-   'org-src-lang-modes '("plantuml" . plantuml))
-  ;; Rendering plantuml
-  (defun plantuml-render-buffer ()
-    (interactive)
-    (message "PLANTUML Start rendering")
-    (shell-command (concat "java -jar " plantuml-jar-path " "
-                           buffer-file-name))
-    (message (concat "PLANTUML Rendered:  " (buffer-name))))
-
-  ;; Image reloading
-  (defun reload-image-at-point ()
-    (interactive)
-    (message "reloading image at point in the current buffer...")
-    (image-refresh (get-text-property (point) 'display)))
-
-  ;; Image resizing and reloading
-  (defun resize-image-at-point ()
-    (interactive)
-    (message "resizing image at point in the current buffer123...")
-    (let* ((image-spec (get-text-property (point) 'display))
-           (file (cadr (member :file image-spec))))
-      (message (concat "resizing image..." file))
-      (shell-command (format "convert -resize %d %s %s "
-                             (* (window-width (selected-window)) (frame-char-width))
-                             file file))
-      (reload-image-at-point)))
-  :init
-  (setq org-ditaa-jar-path "~/.dotfiles/tools/ditaa.jar")
-  (setq plantuml-default-exec-mode 'jar) ;; jar使用本地jar包生成图片
-  (setq plantuml-jar-path "~/.dotfiles/tools/plantuml.jar")
-  (setq org-plantuml-jar-path plantuml-jar-path))
-
-(use-package flycheck-plantuml
-  :ensure t
-  :after plantuml-mode
-  :config (flycheck-plantuml-setup))
-
+(require 'lang+plantuml)
 #+end_src
 ** MPV Player
 
 #+begin_src emacs-lisp
-(use-package mpv)
+(if IS-LINUX (use-package mpv))
 #+end_src
 ** Ivy-youtube
 #+begin_src emacs-lisp :tangle no
@@ -759,124 +658,8 @@ current directory, instead of this Dired buffer's current directory.
 
 Use ~mu4e~ as email client
 
-#+begin_src emacs-lisp :tangle no
-  (use-package mu4e
-    :defer 20 ; Wait until 20 seconds after startup
-    :config
-
-    ;; Load org-mode integration
-    (require 'org-mu4e)
-
-    ;; Refresh mail using isync every 10 minutes
-    (setq mu4e-update-interval (* 10 60))
-    (setq mu4e-get-mail-command "mbsync -a")
-    (setq mu4e-maildir "~/.mail")
-
-    ;; Use Ivy for mu4e completions (maildir folders, etc)
-    (setq mu4e-completing-read-function #'ivy-completing-read)
-
-    ;; Make sure that moving a message (like to Trash) causes the
-    ;; message to get a new file name.  This helps to avoid the
-    ;; dreaded "UID is N beyond highest assigned" error.
-    ;; See this link for more info: https://stackoverflow.com/a/43461973
-    (setq mu4e-change-filenames-when-moving t)
-
-    ;; Set up contexts for email accounts
-    (setq mu4e-contexts
-          `(,(make-mu4e-context
-              :name "qq"
-              :match-func (lambda (msg) (when msg
-                                          (string-prefix-p "/qq" (mu4e-message-field msg :maildir))))
-              :vars '(
-                      (user-full-name . "Xing Wenju")
-                      (user-mail-address . "linuxing3@qq.com")
-                      (mu4e-sent-folder . "/qq/Sent")
-                      (mu4e-trash-folder . "/qq/Trash")
-                      (mu4e-drafts-folder . "/qq/Drafts")
-                      (mu4e-refile-folder . "/qq/Archive")
-                      (mu4e-sent-messages-behavior . sent)
-                      ))
-            ,(make-mu4e-context
-              :name "gmail"
-              :match-func (lambda (msg) (when msg
-                                          (string-prefix-p "/gmail" (mu4e-message-field msg :maildir))))
-              :vars '(
-                      (mu4e-sent-folder . "/gmail/Sent")
-                      (mu4e-trash-folder . "/gmail/Deleted")
-                      (mu4e-refile-folder . "/gmail/Archive")
-                      ))
-            ))
-    (setq mu4e-context-policy 'pick-first)
-
-    ;; Prevent mu4e from permanently deleting trashed items
-    ;; This snippet was taken from the following article:
-    ;; http://cachestocaches.com/2017/3/complete-guide-email-emacs-using-mu-and-/
-    (defun remove-nth-element (nth list)
-      (if (zerop nth) (cdr list)
-        (let ((last (nthcdr (1- nth) list)))
-          (setcdr last (cddr last))
-          list)))
-    (setq mu4e-marks (remove-nth-element 5 mu4e-marks))
-    (add-to-list 'mu4e-marks
-                 '(trash
-                   :char ("d" . "▼")
-                   :prompt "dtrash"
-                   :dyn-target (lambda (target msg) (mu4e-get-trash-folder msg))
-                   :action (lambda (docid msg target)
-                             (mu4e~proc-move docid
-                                             (mu4e~mark-check-target target) "-N"))))
-
-    ;; Display options
-    (setq mu4e-view-show-images t)
-    (setq mu4e-view-show-addresses 't)
-
-    ;; Composing mail
-    (setq mu4e-compose-dont-reply-to-self t)
-
-    ;; Use mu4e for sending e-mail
-    (setq mail-user-agent 'mu4e-user-agent
-          message-send-mail-function 'smtpmail-send-it
-          smtpmail-smtp-server "smtp.gmail.com"
-          smtpmail-smtp-user "xingwenju"
-          smtpmail-smtp-service 465
-          smtpmail-stream-type  'ssl)
-
-    ;; Signing messages (use mml-secure-sign-pgpmime)
-    (setq mml-secure-openpgp-signers '("0D955887B42DEFC8B496E38C9AA4F44E6183E2B1"))
-
-    ;; (See the documentation for `mu4e-sent-messages-behavior' if you have
-    ;; additional non-Gmail addresses and want assign them different
-    ;; behavior.)
-
-    ;; setup some handy shortcuts
-    ;; you can quickly switch to your Inbox -- press ``ji''
-    ;; then, when you want archive some messages, move them to
-    ;; the 'All Mail' folder by pressing ``ma''.
-    (setq mu4e-maildir-shortcuts
-          '(("/qq/Inbox"       . ?i)
-            ("/qq/Lists/*"     . ?l)
-            ("/qq/Sent Mail"   . ?s)
-            ("/qq/Trash"       . ?t)))
-
-    (add-to-list 'mu4e-bookmarks
-                 (make-mu4e-bookmark
-                  :name "All Inboxes"
-                  :query "maildir:/qq/Inbox OR maildir:/gmail/Inbox"
-                  :key ?i))
-
-    ;; don't keep message buffers around
-    (setq message-kill-buffer-on-exit t)
-
-    (setq dw/mu4e-inbox-query
-          "(maildir:/gmail/Inbox OR maildir:/qq/Inbox) AND flag:unread")
-
-    (defun dw/go-to-inbox ()
-      (interactive)
-      (mu4e-headers-search dw/mu4e-inbox-query))
-
-    ;; Start mu4e in the background so that it syncs mail periodically
-    (mu4e t))
-
+#+begin_src emacs-lisp
+(require 'app+mail)
 #+end_src
 
 #+RESULTS:
@@ -884,7 +667,7 @@ Use ~mu4e~ as email client
 ** chinses input 
 
 #+begin_src emacs-lisp
-(require 'module-input)
+(if IS-LINUX (require 'module-input))
 #+end_src
 ** Bluetooth 
 
@@ -958,7 +741,7 @@ This section contains the basic configuration for =org-mode= plus the configurat
   (defun efs/org-mode-setup ()
     (setq-default fill-column 80)
     (auto-fill-mode 0)
-    (setq evil-auto-indent nil)
+    ;; (setq evil-auto-indent nil)
     (org-indent-mode)
     (variable-pitch-mode 1)
     (visual-line-mode 1))
@@ -1093,13 +876,77 @@ This snippet adds a hook to =org-mode= buffers so that =efs/org-babel-tangle-con
 
 #+RESULTS:
 : ./localelpa/themes/
+* 键盘配置
+
+[[https://github.com/noctuid/general.el][general.el]] is used for easy keybinding configuration that integrates well with which-key.
+
+#+begin_src emacs-lisp :tangle no
+
+  ;; Make ESC quit prompts
+  (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+
+  (use-package general
+    :after meow
+    :config
+    (general-create-definer efs/leader-keys
+      :keymaps '(normal insert visual emacs)
+      :prefix "SPC"
+      :global-prefix "C-SPC")
+
+    (efs/leader-keys
+      "t"  '(:ignore t :which-key "toggles")
+      "tt" '(counsel-load-theme :which-key "choose theme")
+      "fde" '(lambda () (interactive) (find-file (expand-file-name "~/emacs-repos/emacs-from-scratch/Emacs.org")))))
+#+end_src
+
+** Evil mode 
+
+This configuration uses [[https://evil.readthedocs.io/en/latest/index.html][evil-mode]] for a Vi-like modal editing experience.
+
+[[https://github.com/emacs-evil/evil-collection][evil-collection]] is used to automatically configure various Emacs modes with Vi-like keybindings for evil-mode.
+
+#+begin_src emacs-lisp :tangle no
+  (use-package evil
+    :init
+    (setq evil-want-integration t)
+    (setq evil-want-keybinding nil)
+    (setq evil-want-C-u-scroll t)
+    (setq evil-want-C-i-jump nil)
+    :config
+    ;; (evil-mode 1)
+    (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state) ;; insert mode escape to normal mode
+    (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join) ;; backward delete
+
+    ;; Use visual line motions even outside of visual-line-mode buffers
+    (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+    (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+
+    (evil-set-initial-state 'messages-buffer-mode 'normal)
+    (evil-set-initial-state 'dashboard-mode 'normal))
+
+  (use-package evil-collection
+    :after evil
+    :config
+    (evil-collection-init))
+
+#+end_src
 * 个人键绑定 
+
 All common binds in one file for better migration!!! Powered by =general=
 
-Instead of using =doom= macros like =map!=, which is not very convenient to migrate.
+** 猫态模式
 
 #+begin_src emacs-lisp
-  (require 'core-keybinds)
+(use-package meow
+  :load-path "./localelpa/meow")
+
+;; (require 'init-modal)
+(require 'init-modal-qwerty)
+#+end_src
+
+** 其他绑定
+#+begin_src emacs-lisp
+ (require 'module-keybinds)
 #+end_src
 
 * 软件开发
