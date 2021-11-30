@@ -411,6 +411,8 @@
 
 (require 'module-remote)
 
+(require 'module-input)
+
   (defun efs/org-font-setup ()
     ;; Replace list hyphen with dot
     (font-lock-add-keywords 'org-mode
@@ -442,6 +444,9 @@
     (set-face-attribute 'line-number-current-line nil :inherit 'fixed-pitch))
 
   (defun efs/org-mode-setup ()
+    (setq-default fill-column 80)
+    (auto-fill-mode 0)
+    (setq evil-auto-indent nil)
     (org-indent-mode)
     (variable-pitch-mode 1)
     (visual-line-mode 1))
@@ -496,6 +501,11 @@
 
     (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
     (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+    (add-to-list 'org-structure-template-alist '("li" . "src lisp"))
+    (add-to-list 'org-structure-template-alist '("sc" . "src scheme"))
+    (add-to-list 'org-structure-template-alist '("ts" . "src typescript"))
+    (add-to-list 'org-structure-template-alist '("py" . "src python"))
+    (add-to-list 'org-structure-template-alist '("go" . "src go"))
     (add-to-list 'org-structure-template-alist '("py" . "src python")))
 
   ;; Automatically tangle our Emacs.org config file when we save it
@@ -520,16 +530,3 @@
 
   ;; Make gc pauses faster by decreasing the threshold.
   (setq gc-cons-threshold (* 2 1000 1000))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(olivetti simple-httpd evil-org ox-hugo org-journal org-pomodoro elfeed-org ox-reveal org-brain org-download htmlize)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )

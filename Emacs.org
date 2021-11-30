@@ -881,6 +881,28 @@ Use ~mu4e~ as email client
 
 #+RESULTS:
 : t
+** chinses input 
+
+#+begin_src emacs-lisp
+(require 'module-input)
+#+end_src
+** Bluetooth 
+
+#+begin_src emacs-lisp :tangle no
+(when IS-LINUX
+  (defun dw/bluetooth-connect-q30 ()
+    (interactive)
+    (start-process-shell-command "bluetoothctl" nil "bluetoothctl -- connect 11:14:00:00:1E:1A"))
+
+  (defun dw/bluetooth-connect-qc35 ()
+    (interactive)
+    (start-process-shell-command "bluetoothctl" nil "bluetoothctl -- connect 04:52:C7:5E:5C:A8"))
+
+  (defun dw/bluetooth-disconnect ()
+    (interactive)
+    (start-process-shell-command "bluetoothctl" nil "bluetoothctl -- disconnect"))
+)
+#+end_src
 
 * Org Mode
 
@@ -934,6 +956,9 @@ This section contains the basic configuration for =org-mode= plus the configurat
 #+begin_src emacs-lisp
 
   (defun efs/org-mode-setup ()
+    (setq-default fill-column 80)
+    (auto-fill-mode 0)
+    (setq evil-auto-indent nil)
     (org-indent-mode)
     (variable-pitch-mode 1)
     (visual-line-mode 1))
@@ -1025,6 +1050,11 @@ You can add more =src= block templates below by copying one of the lines and cha
 
     (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
     (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+    (add-to-list 'org-structure-template-alist '("li" . "src lisp"))
+    (add-to-list 'org-structure-template-alist '("sc" . "src scheme"))
+    (add-to-list 'org-structure-template-alist '("ts" . "src typescript"))
+    (add-to-list 'org-structure-template-alist '("py" . "src python"))
+    (add-to-list 'org-structure-template-alist '("go" . "src go"))
     (add-to-list 'org-structure-template-alist '("py" . "src python")))
 
 #+end_src
