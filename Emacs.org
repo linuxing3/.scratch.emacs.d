@@ -951,7 +951,7 @@ All common binds in one file for better migration!!! Powered by =general=
 
 * 软件开发
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
 (require 'editor+ide)
 #+end_src
 * 运行时表现
