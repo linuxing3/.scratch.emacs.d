@@ -2,11 +2,16 @@
   ;;       in Emacs and init.el will be generated automatically!
 
   ;; You will most likely need to adjust this font size for your system!
-  (defvar efs/default-font-size 140)
-  (defvar efs/default-variable-font-size 140)
+  (defvar efs/default-font-size 160)
+  (defvar efs/default-variable-font-size 160)
 
   ;; Make frame transparency overridable
-  (defvar efs/frame-transparency '(100 . 100))
+  (defvar efs/frame-transparency '(95 . 95))
+
+  (if (string= system-type "windows-nt")
+      (progn
+        (setq efs/default-font-size 120)
+        (setq efs/default-variable-font-size 120)))
 
     ;;(setq locale-coding-system 'utf-8)
     ;;(set-default-coding-systems 'utf-8)
