@@ -225,7 +225,7 @@ I am using the ~Droid Sans Mono~ and ~BlexMono NF~ font over the [[https://githu
 (set-face-attribute 'fixed-pitch nil :font "Droid Sans Mono" :height efs/default-font-size)
 
 ;; Set the variable pitch face
-(set-face-attribute 'variable-pitch nil :font "Cantarell" :height efs/default-variable-font-size :weight 'regular)
+(set-face-attribute 'variable-pitch nil :font "Droid Sans Mono" :height efs/default-variable-font-size :weight 'regular)
 
 #+end_src
 
@@ -823,7 +823,7 @@ The =efs/org-font-setup= function configures various text faces to tweak the siz
                     (org-level-6 . 1.1)
                     (org-level-7 . 1.1)
                     (org-level-8 . 1.1)))
-      (set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face)))
+      (set-face-attribute (car face) nil :font "Droid Sans Mono" :weight 'regular :height (cdr face)))
 
     ;; Ensure that anything that should be fixed-pitch in Org files appears that way
     (set-face-attribute 'org-block nil    :foreground nil :inherit 'fixed-pitch)
@@ -878,7 +878,8 @@ This section contains the basic configuration for =org-mode= plus the configurat
     (define-key global-map (kbd "C-c j")
       (lambda () (interactive) (org-capture nil "xh")))
 
-    (efs/org-font-setup))
+    ;; (efs/org-font-setup)
+    )
 
 #+end_src
 
@@ -975,6 +976,8 @@ This snippet adds a hook to =org-mode= buffers so that =efs/org-babel-tangle-con
 
 #+begin_src emacs-lisp
   (require 'module-org)
+,#+end_#+begin_src 
+
 #+end_src
 * 运行时表现
 

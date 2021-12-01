@@ -137,7 +137,7 @@
 (set-face-attribute 'fixed-pitch nil :font "Droid Sans Mono" :height efs/default-font-size)
 
 ;; Set the variable pitch face
-(set-face-attribute 'variable-pitch nil :font "Cantarell" :height efs/default-variable-font-size :weight 'regular)
+(set-face-attribute 'variable-pitch nil :font "Droid Sans Mono" :height efs/default-variable-font-size :weight 'regular)
 
 ;; (set-fontset-font "fontset-default" 'han "Microsoft YaHei UI")
 (defun +modern-ui-chinese-h ()
@@ -379,7 +379,7 @@
                     (org-level-6 . 1.1)
                     (org-level-7 . 1.1)
                     (org-level-8 . 1.1)))
-      (set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face)))
+      (set-face-attribute (car face) nil :font "Droid Sans Mono" :weight 'regular :height (cdr face)))
 
     ;; Ensure that anything that should be fixed-pitch in Org files appears that way
     (set-face-attribute 'org-block nil    :foreground nil :inherit 'fixed-pitch)
@@ -423,7 +423,8 @@
     (define-key global-map (kbd "C-c j")
       (lambda () (interactive) (org-capture nil "xh")))
 
-    (efs/org-font-setup))
+    ;; (efs/org-font-setup)
+    )
 
   (use-package org-bullets
     :hook (org-mode . org-bullets-mode)
@@ -470,21 +471,7 @@
   (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'efs/org-babel-tangle-config)))
 
   (require 'module-org)
+#+end_#+begin_src
 
   ;; Make gc pauses faster by decreasing the threshold.
   (setq gc-cons-threshold (* 2 1000 1000))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   '("d268b67e0935b9ebc427cad88ded41e875abfcc27abd409726a92e55459e0d01" "97db542a8a1731ef44b60bc97406c1eb7ed4528b0d7296997cbb53969df852d6" "5784d048e5a985627520beb8a101561b502a191b52fa401139f4dd20acb07607" "246a9596178bb806c5f41e5b571546bb6e0f4bd41a9da0df5dfbca7ec6e2250c" "a7b20039f50e839626f8d6aa96df62afebb56a5bbd1192f557cb2efb5fcfb662" default))
- '(package-selected-packages
-   '(calfw-org calfw simple-httpd evil-org ox-hugo org-journal org-pomodoro elfeed-org ox-reveal org-brain org-download htmlize)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
