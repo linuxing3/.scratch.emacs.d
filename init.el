@@ -202,6 +202,8 @@
 (linuxing3/better-ivy-h) ;; use ivy to complete anything, vertico is another options 
 (require 'editor+embark) ;; enable embark tool
 (require 'editor+consult) ;; enable consult than swiper
+(require 'module-completion) ;; enable company completion
+(require 'module-project) ;; enable project and workspace
 
   (use-package term
     :commands term
