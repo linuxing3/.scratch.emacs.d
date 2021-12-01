@@ -20,7 +20,7 @@
   (defvar efs/default-variable-font-size 160)
 
   ;; Make frame transparency overridable
-  (defvar efs/frame-transparency '(95 . 95))
+  (defvar efs/frame-transparency '(99 . 99))
 
   (if (string= system-type "windows-nt")
       (progn

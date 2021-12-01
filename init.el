@@ -6,7 +6,7 @@
   (defvar efs/default-variable-font-size 160)
 
   ;; Make frame transparency overridable
-  (defvar efs/frame-transparency '(95 . 95))
+  (defvar efs/frame-transparency '(99 . 99))
 
   (if (string= system-type "windows-nt")
       (progn
@@ -473,3 +473,18 @@
 
   ;; Make gc pauses faster by decreasing the threshold.
   (setq gc-cons-threshold (* 2 1000 1000))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   '("d268b67e0935b9ebc427cad88ded41e875abfcc27abd409726a92e55459e0d01" "97db542a8a1731ef44b60bc97406c1eb7ed4528b0d7296997cbb53969df852d6" "5784d048e5a985627520beb8a101561b502a191b52fa401139f4dd20acb07607" "246a9596178bb806c5f41e5b571546bb6e0f4bd41a9da0df5dfbca7ec6e2250c" "a7b20039f50e839626f8d6aa96df62afebb56a5bbd1192f557cb2efb5fcfb662" default))
+ '(package-selected-packages
+   '(calfw-org calfw simple-httpd evil-org ox-hugo org-journal org-pomodoro elfeed-org ox-reveal org-brain org-download htmlize)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
