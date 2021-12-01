@@ -1,3 +1,4 @@
+
 #+TITLE: Emacs From Scratch Configuration
 #+PROPERTY: header-args:emacs-lisp :tangle ./init.el :mkdirp yes
 #+STARTUP: overview
@@ -628,6 +629,29 @@ current directory, instead of this Dired buffer's current directory.
       (openwith-mode 1)))
 #+end_src
 
+* 软件开发
+
+** Enable multi edit
+#+begin_src emacs-lisp
+;;; `multiedit'
+(use-package multiple-cursors)
+(require 'multiple-cursors)
+(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+(global-set-key (kbd "C-S-<down>") 'mc/mark-next-like-this) ; vscode like vertical down
+(global-set-key (kbd "C-S-<up>") 'mc/mark-previous-like-this) ; vscode like vertical up
+(global-set-key (kbd "S-M-<down>") 'mc/mark-next-like-this) ; vscode like vertical down
+(global-set-key (kbd "S-M-<up>") 'mc/mark-previous-like-this) ; vscode like vertical up
+(global-set-key (kbd "C-c C-a") 'mc/mark-all-like-this)
+#+end_src
+
+#+RESULTS:
+: mc/mark-all-like-this
+
+** Build your own IDE interface
+
+#+begin_src emacs-lisp
+(require 'editor+ide)
+#+end_src
 * 应用程序
 ** Plantuml drawing tools
 
@@ -687,6 +711,86 @@ Use ~mu4e~ as email client
 )
 #+end_src
 
+* 键盘配置
+** 通用模式
+[[https://github.com/noctuid/general.el][general.el]] is used for easy keybinding configuration that integrates well with which-key.
+
+#+begin_src emacs-lisp :tangle no
+
+  ;; Make ESC quit prompts
+  (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+
+  (use-package general
+    :after meow
+    :config
+    (general-create-definer efs/leader-keys
+      :keymaps '(normal insert visual emacs)
+      :prefix "SPC"
+      :global-prefix "C-SPC")
+
+    (efs/leader-keys
+      "t"  '(:ignore t :which-key "toggles")
+      "tt" '(counsel-load-theme :which-key "choose theme")
+      "fde" '(lambda () (interactive) (find-file (expand-file-name "~/emacs-repos/emacs-from-scratch/Emacs.org")))))
+#+end_src
+
+** 魔态模式
+
+This configuration uses [[https://evil.readthedocs.io/en/latest/index.html][evil-mode]] for a Vi-like modal editing experience.
+
+[[https://github.com/emacs-evil/evil-collection][evil-collection]] is used to automatically configure various Emacs modes with Vi-like keybindings for evil-mode.
+
+#+begin_src emacs-lisp :tangle no
+  (use-package evil
+    :init
+    (setq evil-want-integration t)
+    (setq evil-want-keybinding nil)
+    (setq evil-want-C-u-scroll t)
+    (setq evil-want-C-i-jump nil)
+    :config
+    ;; (evil-mode 1)
+    (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state) ;; insert mode escape to normal mode
+    (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join) ;; backward delete
+
+    ;; Use visual line motions even outside of visual-line-mode buffers
+    (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+    (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+
+    (evil-set-initial-state 'messages-buffer-mode 'normal)
+    (evil-set-initial-state 'dashboard-mode 'normal))
+
+  (use-package evil-collection
+    :after evil
+    :config
+    (evil-collection-init))
+
+#+end_src
+** 猫态模式
+
+#+begin_src emacs-lisp
+(use-package meow
+  :load-path "./localelpa/meow")
+
+;; (require 'init-modal)
+(require 'init-modal-qwerty)
+#+end_src
+
+** 其他绑定
+#+begin_src emacs-lisp
+ (require 'module-keybinds)
+#+end_src
+
+* 个人信息
+#+begin_src emacs-lisp
+(setq bookmark-default-file "~/.dotfiles/custom/emacs/bookmarks-default.el")
+(setq custom-theme-directory "~/.dotfiles/custom/emacs/themes/")
+(setq user-full-name "Xing Wenju"
+      user-mail-address "linuxing3@qq.com")
+(setq browse-url-browser-function 'browse-url-chromium)
+#+end_src
+
+#+RESULTS:
+: ./localelpa/themes/
 * Org Mode
 
 [[https://orgmode.org/][Org Mode]] is one of the hallmark features of Emacs.  It is a rich document editor, project planner, task and time tracker, blogging engine, and literate coding utility all wrapped up in one package.
@@ -864,91 +968,6 @@ This snippet adds a hook to =org-mode= buffers so that =efs/org-babel-tangle-con
 
 #+begin_src emacs-lisp
   (require 'module-org)
-#+end_src
-* 个人信息
-#+begin_src emacs-lisp
-(setq bookmark-default-file "~/.dotfiles/custom/emacs/bookmarks-default.el")
-(setq custom-theme-directory "~/.dotfiles/custom/emacs/themes/")
-(setq user-full-name "Xing Wenju"
-      user-mail-address "linuxing3@qq.com")
-(setq browse-url-browser-function 'browse-url-chromium)
-#+end_src
-
-#+RESULTS:
-: ./localelpa/themes/
-* 键盘配置
-** 通用模式
-[[https://github.com/noctuid/general.el][general.el]] is used for easy keybinding configuration that integrates well with which-key.
-
-#+begin_src emacs-lisp :tangle no
-
-  ;; Make ESC quit prompts
-  (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-
-  (use-package general
-    :after meow
-    :config
-    (general-create-definer efs/leader-keys
-      :keymaps '(normal insert visual emacs)
-      :prefix "SPC"
-      :global-prefix "C-SPC")
-
-    (efs/leader-keys
-      "t"  '(:ignore t :which-key "toggles")
-      "tt" '(counsel-load-theme :which-key "choose theme")
-      "fde" '(lambda () (interactive) (find-file (expand-file-name "~/emacs-repos/emacs-from-scratch/Emacs.org")))))
-#+end_src
-
-** 魔态模式
-
-This configuration uses [[https://evil.readthedocs.io/en/latest/index.html][evil-mode]] for a Vi-like modal editing experience.
-
-[[https://github.com/emacs-evil/evil-collection][evil-collection]] is used to automatically configure various Emacs modes with Vi-like keybindings for evil-mode.
-
-#+begin_src emacs-lisp :tangle no
-  (use-package evil
-    :init
-    (setq evil-want-integration t)
-    (setq evil-want-keybinding nil)
-    (setq evil-want-C-u-scroll t)
-    (setq evil-want-C-i-jump nil)
-    :config
-    ;; (evil-mode 1)
-    (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state) ;; insert mode escape to normal mode
-    (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join) ;; backward delete
-
-    ;; Use visual line motions even outside of visual-line-mode buffers
-    (evil-global-set-key 'motion "j" 'evil-next-visual-line)
-    (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
-
-    (evil-set-initial-state 'messages-buffer-mode 'normal)
-    (evil-set-initial-state 'dashboard-mode 'normal))
-
-  (use-package evil-collection
-    :after evil
-    :config
-    (evil-collection-init))
-
-#+end_src
-** 猫态模式
-
-#+begin_src emacs-lisp
-(use-package meow
-  :load-path "./localelpa/meow")
-
-;; (require 'init-modal)
-(require 'init-modal-qwerty)
-#+end_src
-
-** 其他绑定
-#+begin_src emacs-lisp
- (require 'module-keybinds)
-#+end_src
-
-* 软件开发
-
-#+begin_src emacs-lisp
-(require 'editor+ide)
 #+end_src
 * 运行时表现
 

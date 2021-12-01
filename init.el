@@ -321,6 +321,18 @@
              ))
       (openwith-mode 1)))
 
+;;; `multiedit'
+(use-package multiple-cursors)
+(require 'multiple-cursors)
+(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+(global-set-key (kbd "C-S-<down>") 'mc/mark-next-like-this) ; vscode like vertical down
+(global-set-key (kbd "C-S-<up>") 'mc/mark-previous-like-this) ; vscode like vertical up
+(global-set-key (kbd "S-M-<down>") 'mc/mark-next-like-this) ; vscode like vertical down
+(global-set-key (kbd "S-M-<up>") 'mc/mark-previous-like-this) ; vscode like vertical up
+(global-set-key (kbd "C-c C-a") 'mc/mark-all-like-this)
+
+(require 'editor+ide)
+
 (require 'lang+plantuml)
 
 (if IS-LINUX (use-package mpv))
@@ -330,6 +342,20 @@
 (require 'app+mail)
 
 (if IS-LINUX (require 'module-input))
+
+(use-package meow
+  :load-path "./localelpa/meow")
+
+;; (require 'init-modal)
+(require 'init-modal-qwerty)
+
+ (require 'module-keybinds)
+
+(setq bookmark-default-file "~/.dotfiles/custom/emacs/bookmarks-default.el")
+(setq custom-theme-directory "~/.dotfiles/custom/emacs/themes/")
+(setq user-full-name "Xing Wenju"
+      user-mail-address "linuxing3@qq.com")
+(setq browse-url-browser-function 'browse-url-chromium)
 
   (defun efs/org-font-setup ()
     ;; Replace list hyphen with dot
@@ -437,22 +463,6 @@
   (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'efs/org-babel-tangle-config)))
 
   (require 'module-org)
-
-(setq bookmark-default-file "~/.dotfiles/custom/emacs/bookmarks-default.el")
-(setq custom-theme-directory "~/.dotfiles/custom/emacs/themes/")
-(setq user-full-name "Xing Wenju"
-      user-mail-address "linuxing3@qq.com")
-(setq browse-url-browser-function 'browse-url-chromium)
-
-(use-package meow
-  :load-path "./localelpa/meow")
-
-;; (require 'init-modal)
-(require 'init-modal-qwerty)
-
- (require 'module-keybinds)
-
-(require 'editor+ide)
 
   ;; Make gc pauses faster by decreasing the threshold.
   (setq gc-cons-threshold (* 2 1000 1000))
